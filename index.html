@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zakuro Judo</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Courier New', monospace; background: #f5f0e8; color: #1a1410; }
+  textarea { font-family: 'Courier New', monospace; }
+  select, input { font-family: 'Courier New', monospace; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const { useState } = React;
+
+// ═══════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════
+const techniques = [
+  { id:"seoi-nage",       sv:"Seoi-nage",             cat:"te-waza"     },
+  { id:"ippon-seoi",      sv:"Ippon seoi-nage",       cat:"te-waza"     },
+  { id:"morote-seoi",     sv:"Morote seoi-nage",      cat:"te-waza"     },
+  { id:"tai-otoshi",      sv:"Tai-otoshi",            cat:"te-waza"     },
+  { id:"uki-otoshi",      sv:"Uki-otoshi",            cat:"te-waza"     },
+  { id:"o-goshi",         sv:"O-goshi",               cat:"koshi-waza"  },
+  { id:"harai-goshi",     sv:"Harai-goshi",           cat:"koshi-waza"  },
+  { id:"uchi-mata",       sv:"Uchi-mata",             cat:"koshi-waza"  },
+  { id:"hane-goshi",      sv:"Hane-goshi",            cat:"koshi-waza"  },
+  { id:"tsuri-goshi",     sv:"Tsuri-goshi",           cat:"koshi-waza"  },
+  { id:"koshi-guruma",    sv:"Koshi-guruma",          cat:"koshi-waza"  },
+  { id:"sode-tsuri-komi", sv:"Sode tsuri-komi goshi", cat:"koshi-waza"  },
+  { id:"o-soto-gari",     sv:"O-soto-gari",           cat:"ashi-waza"   },
+  { id:"o-uchi-gari",     sv:"O-uchi-gari",           cat:"ashi-waza"   },
+  { id:"ko-soto-gari",    sv:"Ko-soto-gari",          cat:"ashi-waza"   },
+  { id:"ko-uchi-gari",    sv:"Ko-uchi-gari",          cat:"ashi-waza"   },
+  { id:"de-ashi-harai",   sv:"De-ashi-harai",         cat:"ashi-waza"   },
+  { id:"okuri-ashi",      sv:"Okuri-ashi-harai",      cat:"ashi-waza"   },
+  { id:"ashi-guruma",     sv:"Ashi-guruma",           cat:"ashi-waza"   },
+  { id:"harai-tsuri-komi",sv:"Harai-tsuri-komi-ashi", cat:"ashi-waza"   },
+  { id:"sasae-tsuri-komi",sv:"Sasae-tsuri-komi-ashi", cat:"ashi-waza"   },
+  { id:"tomoe-nage",      sv:"Tomoe-nage",            cat:"sutemi-waza" },
+  { id:"sumi-gaeshi",     sv:"Sumi-gaeshi",           cat:"sutemi-waza" },
+  { id:"tani-otoshi",     sv:"Tani-otoshi",           cat:"sutemi-waza" },
+  { id:"yoko-gake",       sv:"Yoko-gake",             cat:"sutemi-waza" },
+  { id:"uki-waza",        sv:"Uki-waza",              cat:"sutemi-waza" },
+];
+
+const combos = [
+  { from:"seoi-nage",       to:"o-uchi-gari",    typ:"motrörelse", note:"Uke steg back — nedre ben" },
+  { from:"seoi-nage",       to:"ko-uchi-gari",   typ:"motrörelse", note:"Uke steg back — inre fot" },
+  { from:"seoi-nage",       to:"tai-otoshi",     typ:"direkt",     note:"Samma rotation, byt fot" },
+  { from:"seoi-nage",       to:"o-goshi",        typ:"direkt",     note:"Behåll höftposition" },
+  { from:"seoi-nage",       to:"ko-soto-gari",   typ:"motrörelse", note:"Uke trycker fram" },
+  { from:"seoi-nage",       to:"tomoe-nage",     typ:"motrörelse", note:"Uke böjer sig in" },
+  { from:"tai-otoshi",      to:"seoi-nage",      typ:"direkt",     note:"Uke vinklar kroppen ur" },
+  { from:"tai-otoshi",      to:"o-uchi-gari",    typ:"motrörelse", note:"Uke steg tillbaka" },
+  { from:"tai-otoshi",      to:"uchi-mata",      typ:"direkt",     note:"Uke tar emot högt" },
+  { from:"tai-otoshi",      to:"harai-goshi",    typ:"direkt",     note:"Rotera in mer med höften" },
+  { from:"o-soto-gari",     to:"o-uchi-gari",    typ:"direkt",     note:"Kors-ben variant" },
+  { from:"o-soto-gari",     to:"seoi-nage",      typ:"motrörelse", note:"Uke drar sig tillbaka" },
+  { from:"o-soto-gari",     to:"ko-soto-gari",   typ:"direkt",     note:"Kortare version, lägre" },
+  { from:"o-soto-gari",     to:"uchi-mata",      typ:"direkt",     note:"Uke öppnar steg" },
+  { from:"o-soto-gari",     to:"harai-goshi",    typ:"direkt",     note:"Uke lutar bakåt" },
+  { from:"o-uchi-gari",     to:"o-soto-gari",    typ:"direkt",     note:"Växla yttre-inre ben" },
+  { from:"o-uchi-gari",     to:"seoi-nage",      typ:"motrörelse", note:"Uke hoppar bort" },
+  { from:"o-uchi-gari",     to:"harai-goshi",    typ:"direkt",     note:"Uke bär tyngd framåt" },
+  { from:"o-uchi-gari",     to:"uchi-mata",      typ:"direkt",     note:"Uke täcker inre ben" },
+  { from:"o-uchi-gari",     to:"ko-uchi-gari",   typ:"direkt",     note:"Byt till andra foten" },
+  { from:"o-uchi-gari",     to:"tai-otoshi",     typ:"motrörelse", note:"Uke drar sig upp" },
+  { from:"harai-goshi",     to:"uchi-mata",      typ:"direkt",     note:"Uke skyddar yttre" },
+  { from:"harai-goshi",     to:"o-goshi",        typ:"direkt",     note:"Sänk höften" },
+  { from:"harai-goshi",     to:"seoi-nage",      typ:"motrörelse", note:"Uke böjer framåt" },
+  { from:"harai-goshi",     to:"o-uchi-gari",    typ:"motrörelse", note:"Uke steg bakåt" },
+  { from:"harai-goshi",     to:"ko-uchi-gari",   typ:"motrörelse", note:"Uke steg bakåt-in" },
+  { from:"harai-goshi",     to:"hane-goshi",     typ:"direkt",     note:"Mer lyft i benet" },
+  { from:"uchi-mata",       to:"o-soto-gari",    typ:"direkt",     note:"Uke skyddar innerlåret" },
+  { from:"uchi-mata",       to:"harai-goshi",    typ:"direkt",     note:"Uke lutar bakåt" },
+  { from:"uchi-mata",       to:"seoi-nage",      typ:"motrörelse", note:"Uke böjer sig in" },
+  { from:"uchi-mata",       to:"ko-uchi-gari",   typ:"direkt",     note:"Uke tar steg" },
+  { from:"uchi-mata",       to:"o-uchi-gari",    typ:"direkt",     note:"Direkt följd" },
+  { from:"uchi-mata",       to:"tomoe-nage",     typ:"motrörelse", note:"Uke pressar" },
+  { from:"uchi-mata",       to:"sumi-gaeshi",    typ:"motrörelse", note:"Uke pressar hårt" },
+  { from:"ko-uchi-gari",    to:"seoi-nage",      typ:"direkt",     note:"Uke lyfter foten" },
+  { from:"ko-uchi-gari",    to:"o-soto-gari",    typ:"direkt",     note:"Uke tar steg bort" },
+  { from:"ko-uchi-gari",    to:"tai-otoshi",     typ:"direkt",     note:"Uke lutar" },
+  { from:"ko-uchi-gari",    to:"harai-goshi",    typ:"direkt",     note:"Uke steg framåt" },
+  { from:"de-ashi-harai",   to:"seoi-nage",      typ:"motrörelse", note:"Uke drar tillbaka foten" },
+  { from:"de-ashi-harai",   to:"o-soto-gari",    typ:"direkt",     note:"Uke tar steg vidare" },
+  { from:"de-ashi-harai",   to:"okuri-ashi",     typ:"direkt",     note:"Uke förflyttar sig" },
+  { from:"o-goshi",         to:"harai-goshi",    typ:"direkt",     note:"Svepa istället för lyft" },
+  { from:"o-goshi",         to:"seoi-nage",      typ:"direkt",     note:"Axeln istället för höft" },
+  { from:"o-goshi",         to:"o-uchi-gari",    typ:"motrörelse", note:"Uke steg bort" },
+  { from:"tomoe-nage",      to:"sumi-gaeshi",    typ:"direkt",     note:"Höft istället för fot" },
+  { from:"tomoe-nage",      to:"o-uchi-gari",    typ:"motrörelse", note:"Uke hoppar undan" },
+  { from:"hane-goshi",      to:"harai-goshi",    typ:"direkt",     note:"Sänk benet" },
+  { from:"hane-goshi",      to:"uchi-mata",      typ:"direkt",     note:"Uke skyddar höften" },
+  { from:"hane-goshi",      to:"seoi-nage",      typ:"motrörelse", note:"Uke böjer sig undan" },
+  { from:"ko-soto-gari",    to:"o-uchi-gari",    typ:"direkt",     note:"Inre följd" },
+  { from:"ko-soto-gari",    to:"seoi-nage",      typ:"motrörelse", note:"Uke tar steg" },
+  { from:"ko-soto-gari",    to:"tai-otoshi",     typ:"motrörelse", note:"Uke lutar in" },
+  { from:"sasae-tsuri-komi",to:"seoi-nage",      typ:"motrörelse", note:"Uke drar benet" },
+  { from:"sasae-tsuri-komi",to:"harai-goshi",    typ:"direkt",     note:"Uke bär vikt" },
+  { from:"sasae-tsuri-komi",to:"o-uchi-gari",    typ:"direkt",     note:"Fotbyte" },
+];
+
+const CATS = ["te-waza","koshi-waza","ashi-waza","sutemi-waza"];
+const CAT_NAMES = { "te-waza":"Te-waza","koshi-waza":"Koshi-waza","ashi-waza":"Ashi-waza","sutemi-waza":"Sutemi-waza" };
+const CAT_COLOR = {
+  "te-waza":     { bg:"#e8f0fa", dot:"#2c5f8a", tag:"#dce8f5" },
+  "koshi-waza":  { bg:"#faeae0", dot:"#8a4a2c", tag:"#f5e0d0" },
+  "ashi-waza":   { bg:"#e2f5e8", dot:"#2c7a4a", tag:"#d0f0dc" },
+  "sutemi-waza": { bg:"#f0e8fa", dot:"#6a2c8a", tag:"#e8d8f5" },
+};
+
+const kumikata = {
+  "seoi-nage":        { toriH:"Krage (lapel)",         toriV:"Under armen",          ukeH:"Kragen kontrollerad",  ukeV:"Armen låst uppåt" },
+  "ippon-seoi":       { toriH:"Under ukes arm",         toriV:"Drag i ärmen",         ukeH:"Axeln låst",           ukeV:"Armen dragen framåt" },
+  "morote-seoi":      { toriH:"Vid armbågen",           toriV:"Vid axeln",            ukeH:"Armen låst",           ukeV:"Armen kontrollerad" },
+  "tai-otoshi":       { toriH:"Krage (lapel)",          toriV:"Ärm vid armbågen",     ukeH:"Kragen tryckt",        ukeV:"Armen dragen ut" },
+  "uki-otoshi":       { toriH:"Lätt kraggrepp",         toriV:"Fingertoppar på ärm",  ukeH:"Ledd av rörelse",      ukeV:"Ledd av rörelse" },
+  "o-goshi":          { toriH:"Runt midjan",            toriV:"Ärmen dragen",         ukeH:"Midjan kontrollerad",  ukeV:"Armen dragen in" },
+  "harai-goshi":      { toriH:"Högt i krage/nacke",     toriV:"Ärm nedåt-framåt",     ukeH:"Nacken tryckt fram",   ukeV:"Armen dragen ned" },
+  "uchi-mata":        { toriH:"Högt i krage",           toriV:"Ärm fixerad vid höft", ukeH:"Kragen kontrollerad",  ukeV:"Armen låst vid höften" },
+  "hane-goshi":       { toriH:"Krage",                  toriV:"Ärm låst",             ukeH:"Lätt framåt-tryck",    ukeV:"Armen låst" },
+  "tsuri-goshi":      { toriH:"Lyfter i bältet",        toriV:"Drar ärmen uppåt",     ukeH:"Bältet kontrollerat",  ukeV:"Armen lyft" },
+  "koshi-guruma":     { toriH:"Runt nacken",            toriV:"Drar ärm",             ukeH:"Nacken krokad",        ukeV:"Armen dragen" },
+  "sode-tsuri-komi":  { toriH:"Griper ärm (lyft)",      toriV:"Griper ärm (drag)",    ukeH:"Armen lyft",           ukeV:"Armen dragen" },
+  "o-soto-gari":      { toriH:"Trycker krage/axel bak", toriV:"Drar ärmen upp",       ukeH:"Axeln tryckt bakåt",   ukeV:"Armen dragen upp" },
+  "o-uchi-gari":      { toriH:"Kontrollerar kragen",    toriV:"Drar in mot dig",      ukeH:"Kragen kontrollerad",  ukeV:"Dragen in — luta bakåt" },
+  "ko-soto-gari":     { toriH:"Pressar axeln utåt",     toriV:"Drar ärmen",           ukeH:"Axeln pressad ut",     ukeV:"Obalans utåt" },
+  "ko-uchi-gari":     { toriH:"Lätt tryck krage",       toriV:"Drag i ärm",           ukeH:"Minimal obalans",      ukeV:"Minimal obalans" },
+  "de-ashi-harai":    { toriH:"Skjuter horisontellt",   toriV:"Drar horisontellt",    ukeH:"Tryckt i stegets rikt.",ukeV:"Dragen i stegets rikt." },
+  "okuri-ashi":       { toriH:"Skjuter i sidled",       toriV:"Skjuter i sidled",     ukeH:"Tryckt i sidled",      ukeV:"Tryckt i sidled" },
+  "ashi-guruma":      { toriH:"Högt grepp",             toriV:"Drar framåt",          ukeH:"Överkroppen roteras",  ukeV:"Överkroppen roteras" },
+  "harai-tsuri-komi": { toriH:"Lyfter uppåt",           toriV:"Drar framåt",          ukeH:"Lyfts upp",            ukeV:"Dragen framåt" },
+  "sasae-tsuri-komi": { toriH:"Lyfter",                 toriV:"Drar",                 ukeH:"Lyfts",                ukeV:"Dragen — ankeln blockerad" },
+  "tomoe-nage":       { toriH:"Drar uke tätt in",       toriV:"Drar uke tätt in",     ukeH:"Dragen in tätt",       ukeV:"Dragen in tätt" },
+  "sumi-gaeshi":      { toriH:"Tight kumi",             toriV:"Tight kumi",           ukeH:"Lår mot lår",          ukeV:"Lår mot lår" },
+  "tani-otoshi":      { toriH:"Drar bakåt-sida",        toriV:"Drar bakåt-sida",      ukeH:"Dragen bakåt",         ukeV:"Dragen bakåt" },
+  "yoko-gake":        { toriH:"Kontrollerar kragen",    toriV:"Drar",                 ukeH:"Kragen kontrollerad",  ukeV:"Krokad vid foten" },
+  "uki-waza":         { toriH:"Lätt högergrepp",        toriV:"Leder rörelsen",       ukeH:"Ledd",                 ukeV:"Ledd" },
+};
+
+const GREPP_OPTIONS = [
+  "Höger kumi (krage + ärm)","Vänster kumi (krage + ärm)",
+  "Nackgrepp höger","Nackgrepp vänster",
+  "Armhålsgrepp höger","Armhålsgrepp vänster",
+  "Dubbelärm (2-2)","Korsgrepp","Bältesgrepp",
+];
+const UKE_GREPP = [
+  "Höger kumi (krage + ärm)","Vänster kumi (krage + ärm)",
+  "Nackgrepp","Armhålsgrepp","Dubbelärm (2-2)","Korsgrepp",
+  "Defensivt — böjer framåt","Defensivt — reser sig upp",
+  "Defensivt — pressar in","Defensivt — drar sig bakåt",
+];
+const KUMI_TIPS = {
+  "Höger kumi (krage + ärm)":{"Höger kumi (krage + ärm)":["o-uchi-gari","ko-uchi-gari","de-ashi-harai","tai-otoshi"],"Vänster kumi (krage + ärm)":["seoi-nage","ippon-seoi","tai-otoshi","harai-goshi"],"Nackgrepp":["harai-goshi","uchi-mata","hane-goshi","o-goshi"],"Armhålsgrepp":["o-soto-gari","harai-goshi","uchi-mata"],"Dubbelärm (2-2)":["ko-uchi-gari","de-ashi-harai","o-uchi-gari"],"Korsgrepp":["tai-otoshi","uki-otoshi","tani-otoshi"],"Defensivt — böjer framåt":["seoi-nage","ippon-seoi","tomoe-nage"],"Defensivt — reser sig upp":["o-soto-gari","ko-soto-gari","de-ashi-harai"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","o-uchi-gari"],"Defensivt — drar sig bakåt":["harai-goshi","uchi-mata","o-soto-gari"]},
+  "Vänster kumi (krage + ärm)":{"Höger kumi (krage + ärm)":["tai-otoshi","morote-seoi","seoi-nage"],"Vänster kumi (krage + ärm)":["o-uchi-gari","ko-soto-gari","de-ashi-harai"],"Nackgrepp":["harai-goshi","koshi-guruma","uchi-mata"],"Armhålsgrepp":["tai-otoshi","uki-otoshi","ko-soto-gari"],"Dubbelärm (2-2)":["ko-uchi-gari","de-ashi-harai","tai-otoshi"],"Korsgrepp":["uki-otoshi","ko-soto-gari","tani-otoshi"],"Defensivt — böjer framåt":["tai-otoshi","morote-seoi","seoi-nage"],"Defensivt — reser sig upp":["de-ashi-harai","okuri-ashi","ko-soto-gari"],"Defensivt — pressar in":["tomoe-nage","o-uchi-gari","ko-uchi-gari"],"Defensivt — drar sig bakåt":["harai-goshi","uchi-mata","hane-goshi"]},
+  "Nackgrepp höger":{"Höger kumi (krage + ärm)":["harai-goshi","uchi-mata","o-goshi"],"Vänster kumi (krage + ärm)":["harai-goshi","hane-goshi","uchi-mata"],"Nackgrepp":["o-soto-gari","uchi-mata","de-ashi-harai"],"Armhålsgrepp":["o-soto-gari","harai-goshi","o-uchi-gari"],"Dubbelärm (2-2)":["o-soto-gari","de-ashi-harai","ko-uchi-gari"],"Korsgrepp":["tani-otoshi","o-soto-gari","sasae-tsuri-komi"],"Defensivt — böjer framåt":["harai-goshi","uchi-mata","hane-goshi","o-goshi"],"Defensivt — reser sig upp":["o-soto-gari","ko-soto-gari","de-ashi-harai"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","tai-otoshi"],"Defensivt — drar sig bakåt":["o-soto-gari","harai-goshi","sasae-tsuri-komi"]},
+  "Nackgrepp vänster":{"Höger kumi (krage + ärm)":["koshi-guruma","harai-goshi","uchi-mata"],"Vänster kumi (krage + ärm)":["harai-goshi","o-soto-gari","uchi-mata"],"Nackgrepp":["o-soto-gari","de-ashi-harai","okuri-ashi"],"Armhålsgrepp":["harai-goshi","koshi-guruma","o-uchi-gari"],"Dubbelärm (2-2)":["de-ashi-harai","o-uchi-gari","ko-uchi-gari"],"Korsgrepp":["tani-otoshi","o-soto-gari","uki-otoshi"],"Defensivt — böjer framåt":["harai-goshi","uchi-mata","koshi-guruma"],"Defensivt — reser sig upp":["o-soto-gari","de-ashi-harai","okuri-ashi"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","o-goshi"],"Defensivt — drar sig bakåt":["uchi-mata","de-ashi-harai","sasae-tsuri-komi"]},
+  "Armhålsgrepp höger":{"Höger kumi (krage + ärm)":["harai-goshi","uchi-mata","o-goshi"],"Vänster kumi (krage + ärm)":["tai-otoshi","seoi-nage","o-soto-gari"],"Nackgrepp":["o-soto-gari","harai-goshi","uchi-mata"],"Armhålsgrepp":["harai-goshi","uchi-mata","o-goshi"],"Dubbelärm (2-2)":["o-soto-gari","ko-uchi-gari","de-ashi-harai"],"Korsgrepp":["tai-otoshi","uki-otoshi","o-soto-gari"],"Defensivt — böjer framåt":["harai-goshi","uchi-mata","o-goshi"],"Defensivt — reser sig upp":["o-soto-gari","ko-soto-gari","de-ashi-harai"],"Defensivt — pressar in":["tomoe-nage","ko-uchi-gari","o-uchi-gari"],"Defensivt — drar sig bakåt":["o-soto-gari","harai-goshi","sasae-tsuri-komi"]},
+  "Armhålsgrepp vänster":{"Höger kumi (krage + ärm)":["harai-goshi","hane-goshi","koshi-guruma"],"Vänster kumi (krage + ärm)":["tai-otoshi","uki-otoshi","ko-soto-gari"],"Nackgrepp":["uchi-mata","harai-goshi","koshi-guruma"],"Armhålsgrepp":["harai-goshi","hane-goshi","uchi-mata"],"Dubbelärm (2-2)":["de-ashi-harai","o-uchi-gari","ko-soto-gari"],"Korsgrepp":["uki-otoshi","tai-otoshi","ko-soto-gari"],"Defensivt — böjer framåt":["harai-goshi","hane-goshi","koshi-guruma"],"Defensivt — reser sig upp":["de-ashi-harai","okuri-ashi","o-soto-gari"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","o-uchi-gari"],"Defensivt — drar sig bakåt":["uchi-mata","de-ashi-harai","sasae-tsuri-komi"]},
+  "Dubbelärm (2-2)":{"Höger kumi (krage + ärm)":["seoi-nage","tai-otoshi","harai-goshi"],"Vänster kumi (krage + ärm)":["tai-otoshi","ko-soto-gari","de-ashi-harai"],"Nackgrepp":["o-goshi","tsuri-goshi","harai-goshi"],"Armhålsgrepp":["o-goshi","harai-goshi","uchi-mata"],"Dubbelärm (2-2)":["ko-uchi-gari","o-uchi-gari","de-ashi-harai"],"Korsgrepp":["uki-otoshi","tai-otoshi","sumi-gaeshi"],"Defensivt — böjer framåt":["o-goshi","tsuri-goshi","harai-goshi"],"Defensivt — reser sig upp":["o-soto-gari","de-ashi-harai","ko-soto-gari"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","ko-uchi-gari"],"Defensivt — drar sig bakåt":["harai-goshi","seoi-nage","tai-otoshi"]},
+  "Korsgrepp":{"Höger kumi (krage + ärm)":["tai-otoshi","uki-otoshi","o-soto-gari"],"Vänster kumi (krage + ärm)":["uki-otoshi","ko-soto-gari","tani-otoshi"],"Nackgrepp":["tani-otoshi","o-soto-gari","uki-otoshi"],"Armhålsgrepp":["uki-otoshi","tai-otoshi","o-soto-gari"],"Dubbelärm (2-2)":["uki-otoshi","tai-otoshi","sumi-gaeshi"],"Korsgrepp":["uki-otoshi","tani-otoshi","yoko-gake"],"Defensivt — böjer framåt":["tomoe-nage","sumi-gaeshi","uki-otoshi"],"Defensivt — reser sig upp":["o-soto-gari","de-ashi-harai","sasae-tsuri-komi"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","yoko-gake"],"Defensivt — drar sig bakåt":["o-soto-gari","harai-goshi","sasae-tsuri-komi"]},
+  "Bältesgrepp":{"Höger kumi (krage + ärm)":["harai-goshi","uchi-mata","o-goshi","tsuri-goshi"],"Vänster kumi (krage + ärm)":["harai-goshi","koshi-guruma","uchi-mata"],"Nackgrepp":["harai-goshi","uchi-mata","tsuri-goshi"],"Armhålsgrepp":["harai-goshi","o-goshi","tsuri-goshi"],"Dubbelärm (2-2)":["o-goshi","tsuri-goshi","de-ashi-harai"],"Korsgrepp":["tani-otoshi","o-soto-gari","uki-otoshi"],"Defensivt — böjer framåt":["harai-goshi","uchi-mata","o-goshi","tsuri-goshi"],"Defensivt — reser sig upp":["o-soto-gari","de-ashi-harai","ko-soto-gari"],"Defensivt — drar sig bakåt":["o-uchi-gari","ko-uchi-gari","tani-otoshi"],"Defensivt — pressar in":["tomoe-nage","sumi-gaeshi","o-goshi"]},
+};
+
+const LAYER_COLORS = [
+  { topC:"#8BC87A", rightC:"#5A9A48", tc:"#1A4A0A", bg:"#DFF2D0", bdr:"#3B7A18" },
+  { topC:"#A0D080", rightC:"#6AAA40", tc:"#1A4A0A", bg:"#DFF2D0", bdr:"#3B7A18" },
+  { topC:"#C0E898", rightC:"#88C060", tc:"#1A4A0A", bg:"#DFF2D0", bdr:"#3B7A18" },
+  { topC:"#C8C6BA", rightC:"#A0A090", tc:"#303028", bg:"#EEEEE8", bdr:"#909088" },
+  { topC:"#F0C0A0", rightC:"#C88060", tc:"#6A2A10", bg:"#FAE8DC", bdr:"#C07040" },
+  { topC:"#E89070", rightC:"#C06040", tc:"#6A1A10", bg:"#FAE0D8", bdr:"#B05030" },
+  { topC:"#E86060", rightC:"#B82020", tc:"#6A0A0A", bg:"#FAD8D8", bdr:"#A82020" },
+];
+const REFERENCE = [
+  { name:"Idealläge",        sub:"Ärm-lapelgrepp",   pts:["Axelkontroll med ärm- och lapelgrepp","Frigör armar för effektiv kuzushi","Distanshantering för acceleration"] },
+  { name:"Nackgrepp",        sub:"God kontroll",      pts:["Kontrollerar motståndarens axlar","Nackgrepp provocerar motst. att böja höfter"] },
+  { name:"Armhålsgrepp",     sub:"Axelkontroll",      pts:["Axel- och överkroppskontroll","Distanshantering med armhålsgrepp"] },
+  { name:"Neutralt 2-2",     sub:"Ingen klar fördel", pts:["Extremt 2-2-läge — höger mot höger","Risk för motangrepp vid eget anfall"] },
+  { name:"Korsgrepp",        sub:"Oortodox läge",     pts:["Korsgrepp leder till oortodox situation","Egna handlingsalternativ kraftigt begränsade"] },
+  { name:"Närkampsläge",     sub:"Farligt",           pts:["Ingen distans — motst. låser med o-goshi-grepp","Begränsad variation ökar kontrashot"] },
+  { name:"Maximalt farligt", sub:"Kontroll förlorad", pts:["Nack-/rygggrepp — tvingad höftflexion","Förlorar fullständig kontroll"] },
+];
+const EMPTY_LAYERS = LAYER_COLORS.map(c => ({ ...c, name:"", sub:"", pts:[""] }));
+
+// ═══════════════════════════════════════════════
+// KUB SVG
+// ═══════════════════════════════════════════════
+const CW=96, CH=46, CX=48, CY=70, CDX=68, CDY=34;
+function KubSVG({ layers, activeRow, onRowClick }) {
+  const tx0=CX+CDX, ty0=CY-CDY;
+  return (
+    <svg viewBox="0 0 340 400" style={{width:"100%",maxWidth:340}}>
+      <polygon points={`${tx0},${ty0} ${tx0+2*CW},${ty0} ${CX+2*CW},${CY} ${CX},${CY}`} fill={layers[0].topC} stroke="white" strokeWidth="1.8"/>
+      <line x1={tx0+CW} y1={ty0} x2={CX+CW} y2={CY} stroke="white" strokeWidth="1.5"/>
+      <text fontFamily="monospace" fontSize="9" fill="#555" x={tx0+CW} y={ty0-6} textAnchor="middle">(bak)</text>
+      <text fontFamily="monospace" fontSize="9" fill="#555" x={CX-5} y={CY+5} textAnchor="end" transform={`rotate(-25,${CX-5},${CY+5})`}>(höger)</text>
+      <text fontFamily="monospace" fontSize="9" fill="#555" x={CX+2*CW+CDX+3} y={ty0+7}>(vänster)</text>
+      {layers.map((c,r) => {
+        const fy=CY+r*CH, op=activeRow===null?1:activeRow===r?1:0.2;
+        const ry0=fy-CDY, ry1=fy+CH-CDY;
+        return (
+          <g key={r} opacity={op} onClick={()=>onRowClick(r)} style={{cursor:"pointer"}}>
+            <rect x={CX} y={fy} width={CW} height={CH} fill={c.topC} stroke="white" strokeWidth="1.8"/>
+            <rect x={CX+CW} y={fy} width={CW} height={CH} fill={c.topC} stroke="white" strokeWidth="1.8"/>
+            <polygon points={`${CX+2*CW},${fy} ${CX+2*CW+CDX},${ry0} ${CX+2*CW+CDX},${ry1} ${CX+2*CW},${fy+CH}`} fill={c.rightC} stroke="white" strokeWidth="1.8"/>
+            {activeRow===r && <rect x={CX-2} y={fy-2} width={2*CW+4} height={CH+4} fill="none" stroke="#1a1410" strokeWidth="2.5" rx="2"/>}
+          </g>
+        );
+      })}
+      <rect x={CX} y={CY} width={2*CW} height={7*CH} fill="none" stroke="#555" strokeWidth="1.4"/>
+      <line x1={CX+CW} y1={CY} x2={CX+CW} y2={CY+7*CH} stroke="#555" strokeWidth="0.8"/>
+      <polygon points={`${CX+2*CW},${CY} ${CX+2*CW+CDX},${CY-CDY} ${CX+2*CW+CDX},${CY+7*CH-CDY} ${CX+2*CW},${CY+7*CH}`} fill="none" stroke="#555" strokeWidth="1.4"/>
+      <text fontFamily="monospace" fontSize="9" fill="#555" x={CX+CW} y={CY+7*CH+14} textAnchor="middle">(fram)</text>
+    </svg>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// MAIN APP
+// ═══════════════════════════════════════════════
+function App() {
+  const [mainTab,    setMainTab]    = useState("kombdb");
+  const [selectedId, setSelectedId] = useState(null);
+  const [filterCat,  setFilterCat]  = useState("all");
+  const [showRev,    setShowRev]    = useState(false);
+  const [search,     setSearch]     = useState("");
+  const [koncTab,    setKoncTab]    = useState("sit");
+  const [layers,     setLayers]     = useState(EMPTY_LAYERS);
+  const [activeRow,  setActiveRow]  = useState(null);
+  const [showRef,    setShowRef]    = useState(true);
+  // Shared state
+  const [stance,     setStance]     = useState(""); // "höger" | "vänster"
+  const [favGrepp,   setFavGrepp]   = useState("");
+  const [tori,       setTori]       = useState("");
+  const [uke,        setUke]        = useState("");
+  const [selectedCombos,  setSelectedCombos]  = useState({}); // {techId: comboTechId}
+  const [awaitingCombo,   setAwaitingCombo]   = useState(false); // true after picking standard tech
+  const [standardTechIds, setStandardTechIds] = useState([]);
+  const [oppTechIds,      setOppTechIds]      = useState([]);
+  const [oppGrepp,        setOppGrepp]        = useState("");
+  const [oppStance,       setOppStance]       = useState("");
+  const [oppName,         setOppName]         = useState("");
+  const [oppCountry,      setOppCountry]      = useState("");
+  const [oppWeight,       setOppWeight]       = useState("");
+  const [del1Locked,      setDel1Locked]      = useState(false);
+  const [matchNotes,      setMatchNotes]      = useState(["","",""]);
+  const [matchScore,      setMatchScore]      = useState({my:0,opp:0,myWazari:0,oppWazari:0,myYuko:0,oppYuko:0,myShido:0,oppShido:0});
+  const [matchPhase,      setMatchPhase]      = useState(""); // "early"|"mid"|"late"
+  const [matchResult,     setMatchResult]     = useState(""); // "win"|"loss"|"draw"
+  const [oppFilterCat,    setOppFilterCat]    = useState("all");
+
+  // Layer helpers
+  function updateLayer(i,f,v) { setLayers(p=>p.map((l,idx)=>idx===i?{...l,[f]:v}:l)); }
+  function updatePt(li,pi,v) { setLayers(p=>p.map((l,idx)=>{ if(idx!==li)return l; const pts=[...l.pts]; pts[pi]=v; return {...l,pts}; })); }
+  function addPt(li) { setLayers(p=>p.map((l,i)=>i===li?{...l,pts:[...l.pts,""]}:l)); }
+  function removePt(li,pi) { setLayers(p=>p.map((l,i)=>i!==li?l:{...l,pts:l.pts.filter((_,j)=>j!==pi)})); }
+  function resetAll() { setLayers(EMPTY_LAYERS.map(l=>({...l,pts:[""]}))); setActiveRow(null); }
+
+  // Derived
+  const filteredTechs = techniques.filter(t =>
+    (filterCat==="all" || t.cat===filterCat) &&
+    (!search || t.sv.toLowerCase().includes(search.toLowerCase()))
+  );
+  const tech      = techniques.find(t=>t.id===selectedId);
+  const outCombos = combos.filter(c=>c.from===selectedId);
+  const inCombos  = showRev ? combos.filter(c=>c.to===selectedId) : [];
+  const direkt    = outCombos.filter(c=>c.typ==="direkt");
+  const motror    = outCombos.filter(c=>c.typ==="motrörelse");
+  const recIds    = (tori&&uke) ? (KUMI_TIPS[tori]?.[uke]||[]) : [];
+  const recTechs  = recIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+  const selectedComboId   = selectedId ? selectedCombos[selectedId] : null;
+  const selectedComboTech = techniques.find(t=>t.id===selectedComboId);
+  const standardTechs = standardTechIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+  const oppTechs = oppTechIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+  const oppTech = oppTechs[0] || null; // backwards compat for info panel
+  const ashiFollowUp = tech?.cat==="ashi-waza"
+    ? techniques.filter(t=>(t.cat==="te-waza"||t.cat==="koshi-waza")&&!outCombos.find(c=>c.to===t.id))
+    : [];
+
+  // Styles
+  const ink="#1a1410", mid="#8a7a6a", border="#e0d8cc", red="#c0392b", gold="#b8860b", green="#3B7A18", paper="#faf8f3", bg="#f5f0e8";
+  const inp = { width:"100%",padding:"5px 8px",fontSize:11,background:paper,border:`1px solid ${border}`,borderRadius:4,color:ink,outline:"none",fontFamily:"'Courier New',monospace",boxSizing:"border-box" };
+  const btn = (col,solid=false) => ({ fontFamily:"'Courier New',monospace",fontSize:10,padding:"3px 9px",borderRadius:4,cursor:"pointer",background:solid?col:"transparent",border:`1px solid ${col}`,color:solid?"#fff":col,fontWeight:600 });
+  const navBtn = (id) => ({ fontFamily:"'Courier New',monospace",fontSize:"0.6rem",padding:"0.45rem 0.8rem",cursor:"pointer",letterSpacing:"0.06em",textTransform:"uppercase",fontWeight:mainTab===id?700:400,background:mainTab===id?red:"transparent",color:mainTab===id?"#fff":mid,border:mainTab===id?`1px solid ${red}`:"1px solid #3a3028",borderRadius:3,transition:"all 0.15s" });
+  const subBtn = (id,cur) => ({ fontFamily:"'Courier New',monospace",fontSize:"0.6rem",padding:"0.45rem 0.75rem",background:"transparent",border:"none",borderBottom:cur===id?`2px solid ${ink}`:"2px solid transparent",fontWeight:cur===id?700:400,color:cur===id?ink:mid,cursor:"pointer",letterSpacing:"0.06em",textTransform:"uppercase" });
+
+  // Shared banner
+  const KumiBanner = () => (tori||uke) ? (
+    <div style={{background:"#fdf8ee",border:`1.5px solid ${gold}`,borderRadius:7,padding:"8px 12px",marginBottom:10,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+      <span style={{fontSize:"0.52rem",textTransform:"uppercase",color:gold,fontWeight:700}}>Kumikata</span>
+      {tori&&<span style={{fontSize:"0.7rem",background:"#DFF2D0",color:"#27500A",padding:"2px 8px",borderRadius:4,fontWeight:600}}>Tori: {tori}</span>}
+      {uke&&<span style={{fontSize:"0.7rem",background:"#faeae0",color:"#8a4a2c",padding:"2px 8px",borderRadius:4,fontWeight:600}}>Uke: {uke}</span>}
+      <button onClick={()=>setMainTab("teknik")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"2px 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${gold}`,color:gold,marginLeft:"auto"}}>← Ändra</button>
+    </div>
+  ) : null;
+
+  return (
+    <div style={{fontFamily:"'Courier New',monospace",background:bg,minHeight:"100vh",color:ink}}>
+
+      {/* HEADER */}
+      <div style={{background:ink,color:paper,padding:"0.8rem 1rem",display:"flex",alignItems:"flex-end",justifyContent:"space-between",flexWrap:"wrap",gap:"0.5rem"}}>
+        <div>
+          <div style={{fontSize:"clamp(1.1rem,4vw,1.5rem)",fontWeight:700,letterSpacing:"0.06em"}}>ZAKURO <span style={{color:red}}>JUDO</span></div>
+          <div style={{fontSize:"0.55rem",color:mid,letterSpacing:"0.14em",textTransform:"uppercase",marginTop:"0.2rem"}}>Teknik · Motståndare · Tori vs Uke · Strategi · Kampkoncept · Match</div>
+        </div>
+        <div style={{display:"flex",gap:"0.5rem",flexWrap:"wrap",alignItems:"center"}}>
+          {/* Del 1 */}
+          <div style={{display:"flex",gap:"0.3rem",flexWrap:"wrap",alignItems:"center"}}>
+            <span style={{fontSize:"0.45rem",textTransform:"uppercase",letterSpacing:"0.1em",color:"#6a5a4a",marginRight:2}}>Del 1</span>
+            {[["kombdb","Teknik"],["koncept","Kampkoncept"]].map(([id,label])=>(
+              <button key={id}
+                onClick={()=>{ if(!del1Locked) setMainTab(id); else setMainTab(id); }}
+                style={{...navBtn(id), opacity: del1Locked && mainTab!==id ? 0.6 : 1, position:"relative"}}>
+                {label}
+                {del1Locked && <span style={{position:"absolute",top:-3,right:-3,fontSize:8}}>🔒</span>}
+              </button>
+            ))}
+            <button
+              onClick={()=>setDel1Locked(p=>!p)}
+              title={del1Locked?"Lås upp Del 1":"Lås Del 1"}
+              style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"3px 7px",borderRadius:4,cursor:"pointer",background:del1Locked?"#b8860b":"transparent",border:`1px solid ${del1Locked?"#b8860b":"#6a5a4a"}`,color:del1Locked?"#fff":"#6a5a4a",transition:"all 0.15s"}}>
+              {del1Locked ? "🔒" : "🔓"}
+            </button>
+          </div>
+          <span style={{color:"#4a3a2a",fontSize:"0.7rem",opacity:0.4}}>|</span>
+          {/* Del 2 */}
+          <div style={{display:"flex",gap:"0.3rem",flexWrap:"wrap",alignItems:"center"}}>
+            <span style={{fontSize:"0.45rem",textTransform:"uppercase",letterSpacing:"0.1em",color:"#6a5a4a",marginRight:2}}>Del 2</span>
+            {[["motstand","Motståndare"],["foruts","Tori vs Uke"],["strategi","Strategi & Taktik"],["matchanalys","Match Analys"]].map(([id,label])=>(
+              <button key={id} onClick={()=>setMainTab(id)} style={navBtn(id)}>{label}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* ══ TEKNIK ══ */}
+      {mainTab==="kombdb" && (
+        <div style={{maxWidth:1100,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+
+          {/* Lock banner */}
+          {del1Locked && (
+            <div style={{background:"#fdf8ee",border:`1.5px solid #b8860b`,borderRadius:7,padding:"7px 12px",marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:"0.9rem"}}>🔒</span>
+              <span style={{fontSize:"0.65rem",color:"#b8860b",fontWeight:700}}>Del 1 är låst — inställningarna är sparade</span>
+              <button onClick={()=>setDel1Locked(false)} style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"2px 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:"1px solid #b8860b",color:"#b8860b",marginLeft:"auto"}}>🔓 Lås upp</button>
+            </div>
+          )}
+
+          {/* Spelarinställningar */}
+          <div style={{background:paper,border:`1.5px solid ${del1Locked?"#b8860b":border}`,borderRadius:8,padding:"0.8rem 1rem",marginBottom:10,pointerEvents:del1Locked?"none":"auto",opacity:del1Locked?0.7:1,position:"relative"}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid,fontWeight:700,marginBottom:8}}>Spelarinställningar</div>
+            <div style={{display:"flex",gap:16,flexWrap:"wrap",alignItems:"flex-end"}}>
+              {/* Stans */}
+              <div>
+                <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,marginBottom:4}}>Stans</div>
+                <div style={{display:"flex",gap:6}}>
+                  {["Höger","Vänster"].map(s=>(
+                    <button key={s} onClick={()=>setStance(stance===s.toLowerCase()?"":s.toLowerCase())}
+                      style={{fontFamily:"'Courier New',monospace",fontSize:"0.68rem",padding:"5px 12px",borderRadius:4,cursor:"pointer",fontWeight:stance===s.toLowerCase()?700:400,background:stance===s.toLowerCase()?ink:"transparent",color:stance===s.toLowerCase()?paper:ink,border:`1.5px solid ${stance===s.toLowerCase()?ink:border}`,transition:"all 0.12s"}}>
+                      {s==="Höger"?"► Höger":"◄ Vänster"}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {/* Favoritgrepp */}
+              <div style={{flex:1,minWidth:200}}>
+                <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,marginBottom:4}}>Favoritgrepp — Kumikata</div>
+                <select value={favGrepp} onChange={e=>setFavGrepp(e.target.value)}
+                  style={{...inp,padding:"5px 8px",cursor:"pointer",color:favGrepp?ink:mid}}>
+                  <option value="">— Välj grepp —</option>
+                  {GREPP_OPTIONS.map(g=><option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+              {(stance||favGrepp) && (
+                <button onClick={()=>{setStance("");setFavGrepp("");}} style={{...btn(mid),fontSize:"0.55rem",padding:"5px 10px"}}>↺ Rensa</button>
+              )}
+            </div>
+            {(stance||favGrepp) && (
+              <div style={{marginTop:8,paddingTop:8,borderTop:`1px solid ${border}`,display:"flex",gap:6,flexWrap:"wrap",alignItems:"center"}}>
+                <span style={{fontSize:"0.52rem",color:mid}}>Aktiv profil:</span>
+                {stance&&<span style={{fontSize:"0.68rem",fontWeight:700,background:ink,color:paper,padding:"2px 8px",borderRadius:4}}>{stance==="höger"?"► Höger":"◄ Vänster"}</span>}
+                {favGrepp&&<span style={{fontSize:"0.68rem",fontWeight:700,background:"#fdf8ee",color:gold,padding:"2px 8px",borderRadius:4,border:`1px solid ${gold}40`}}>{favGrepp}</span>}
+              </div>
+            )}
+          </div>
+
+          <KumiBanner/>
+
+          {/* Standard teknik + kombination sammandrag */}
+          {standardTechs.length > 0 && (
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:8,marginBottom:10}}>
+              {standardTechs.map((st,i)=>{
+                const cc=CAT_COLOR[st.cat];
+                const comboId=selectedCombos[st.id];
+                const comboTech=techniques.find(t=>t.id===comboId);
+                const isActive=selectedId===st.id;
+                return (
+                  <div key={st.id}
+                    onClick={()=>setSelectedId(st.id)}
+                    style={{background:isActive?cc.bg:paper,border:`2px solid ${isActive?cc.dot:"#c0392b"}`,borderRadius:8,padding:"0.7rem 0.9rem",cursor:"pointer",transition:"all 0.12s"}}>
+                    {/* Teknik rad */}
+                    <div style={{display:"flex",alignItems:"center",gap:6,marginBottom:comboTech?6:0}}>
+                      <span style={{fontSize:"0.65rem",fontWeight:700,color:"#c0392b",flexShrink:0}}>●{i+1}</span>
+                      <span style={{fontSize:"0.82rem",fontWeight:700,color:cc.dot}}>{st.sv}</span>
+                      <span style={{fontSize:"0.5rem",textTransform:"uppercase",color:mid,marginLeft:"auto"}}>{CAT_NAMES[st.cat]}</span>
+                    </div>
+                    {/* Kombination rad */}
+                    {comboTech ? (
+                      <div style={{display:"flex",alignItems:"center",gap:5,paddingTop:5,borderTop:`1px solid ${cc.dot}30`}}>
+                        <span style={{fontSize:"0.55rem",color:mid}}>→</span>
+                        <span style={{fontSize:"0.72rem",fontWeight:600,color:CAT_COLOR[comboTech.cat].dot,background:CAT_COLOR[comboTech.cat].tag,padding:"1px 7px",borderRadius:3}}>{comboTech.sv}</span>
+                        <button onMouseDown={e=>{e.stopPropagation();setSelectedCombos(p=>{const n={...p};delete n[st.id];return n;});setAwaitingCombo(true);setSelectedId(st.id);}}
+                          style={{fontFamily:"'Courier New',monospace",fontSize:"0.48rem",padding:"1px 5px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid,marginLeft:"auto"}}>✕</button>
+                      </div>
+                    ) : (
+                      <div style={{paddingTop:4,borderTop:`1px solid ${cc.dot}30`,fontSize:"0.58rem",color:isActive?"#c0392b":mid,fontStyle:isActive?"normal":"italic",fontWeight:isActive?700:400}}>
+                        {isActive ? "👇 Välj kombination nedan" : "Ingen kombination vald"}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Filters */}
+          <div style={{display:"flex",flexWrap:"wrap",gap:"0.4rem",marginBottom:"0.8rem",alignItems:"center"}}>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Sök…" style={{...inp,width:140,padding:"0.35rem 0.6rem"}}/>
+            {["all",...CATS].map(c=>(
+              <button key={c} onClick={()=>setFilterCat(c)} style={{...btn(filterCat===c?ink:"#b0a898",filterCat===c),fontSize:"0.6rem",padding:"0.3rem 0.6rem",textTransform:"uppercase",letterSpacing:"0.05em"}}>
+                {c==="all"?"Alla":CAT_NAMES[c]}
+              </button>
+            ))}
+
+          </div>
+
+          {/* Grid */}
+          <div style={{display:"flex",gap:"0.8rem",alignItems:"flex-start",flexWrap:"wrap"}}>
+            <aside style={{width:"100%",maxWidth:220,flexShrink:0,background:paper,border:`1.5px solid ${border}`,padding:"0.7rem",overflowY:"scroll",maxHeight:"60vh",WebkitOverflowScrolling:"touch"}}>
+              <div style={{fontSize:"0.55rem",textTransform:"uppercase",letterSpacing:"0.14em",color:mid,marginBottom:"0.5rem",paddingBottom:"0.4rem",borderBottom:`1px solid ${border}`}}>Välj upp till 2 tekniker</div>
+              {CATS.map(cat=>{
+                const items=filteredTechs.filter(t=>t.cat===cat);
+                if(!items.length) return null;
+                const cc=CAT_COLOR[cat];
+                return (
+                  <div key={cat}>
+                    <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:cc.dot,padding:"0.45rem 0 0.2rem",fontWeight:700}}>{CAT_NAMES[cat]}</div>
+                    {items.map(t=>{
+                      const isRec=recIds.includes(t.id);
+                      return (
+                        <div key={t.id}
+                          onClick={()=>{
+                            if(del1Locked) { setSelectedId(t.id); return; }
+                            setSelectedId(t.id);
+                            setStandardTechIds(prev=>{
+                              if(prev.includes(t.id)) {
+                                setAwaitingCombo(false);
+                                return prev.filter(id=>id!==t.id);
+                              }
+                              setAwaitingCombo(true);
+                              if(prev.length>=2) return [...prev.slice(1),t.id];
+                              return [...prev,t.id];
+                            });
+                          }}
+                          style={{padding:"0.4rem 0.5rem",cursor:"pointer",borderLeft:`3px solid ${standardTechIds.includes(t.id)?"#c0392b":selectedId===t.id?cc.dot:isRec?gold:"transparent"}`,background:standardTechIds.includes(t.id)?"#fde8e6":selectedId===t.id?cc.bg:isRec?"#fdf8ee":"transparent",fontSize:"0.72rem",fontWeight:(selectedId===t.id||isRec||standardTechIds.includes(t.id))?700:400,borderRadius:"0 3px 3px 0",marginBottom:"0.1rem",transition:"all 0.1s",display:"flex",alignItems:"center",gap:4}}>
+                          {standardTechIds.includes(t.id)&&<span style={{fontSize:"0.55rem",color:"#c0392b"}}>●{standardTechIds.indexOf(t.id)+1}</span>}
+                          {isRec&&!standardTechIds.includes(t.id)&&<span style={{fontSize:"0.55rem",color:gold}}>★</span>}
+                          {t.sv}
+                          {selectedCombos[t.id]&&<span style={{fontSize:"0.48rem",color:mid,marginLeft:"auto"}}>→{techniques.find(x=>x.id===selectedCombos[t.id])?.sv?.split("-")[0]}</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              })}
+            </aside>
+            <main style={{flex:1,minWidth:260,background:paper,border:`1.5px solid ${border}`,padding:"1rem",minHeight:300}}>
+              {!tech ? (
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",height:260,color:mid,gap:"0.5rem"}}>
+                  <div style={{fontSize:"2rem",opacity:0.15}}>▶</div>
+                  <div style={{fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.1em"}}>Välj en teknik</div>
+                </div>
+              ) : (
+                <KombPanel
+                  tech={tech} direkt={direkt} motror={motror}
+                  outCombos={outCombos} inCombos={inCombos}
+                  showRev={showRev} setSelectedId={setSelectedId}
+                  ashiFollowUp={ashiFollowUp} recIds={recIds}
+                  stance={stance} favGrepp={favGrepp}
+                  selectedCombos={selectedCombos} setSelectedCombos={setSelectedCombos}
+                  standardTechIds={standardTechIds}
+                  del1Locked={del1Locked}
+                  awaitingCombo={awaitingCombo} setAwaitingCombo={setAwaitingCombo}
+                  ink={ink} mid={mid} border={border} red={red} gold={gold} bg={bg}
+                />
+              )}
+            </main>
+          </div>
+
+          {/* Next button */}
+          {/* Next buttons */}
+          <div style={{display:"flex",justifyContent:"flex-end",marginTop:12}}>
+            <button onClick={()=>setMainTab("koncept")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"8px 16px",borderRadius:5,cursor:"pointer",background:"#2c5f8a",border:"1px solid #2c5f8a",color:"#fff",fontWeight:700,letterSpacing:"0.06em"}}>Kampkoncept →</button>
+          </div>
+        </div>
+      )}
+
+
+
+      {/* ══ MOTSTÅNDARE ══ */}
+      {mainTab==="motstand" && (
+        <div style={{maxWidth:560,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+
+          {/* Motståndarens info */}
+          <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:8,padding:"0.8rem 1rem",marginBottom:10}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:"#c0392b",fontWeight:700,marginBottom:8}}>Motståndarens profil</div>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr 1fr",gap:8}}>
+              <div>
+                <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Namn</div>
+                <input value={oppName} onChange={e=>setOppName(e.target.value)}
+                  placeholder="Namn…"
+                  style={{...inp,fontSize:11,padding:"5px 8px",border:`1px solid ${oppName?"#c0392b":border}`,color:oppName?"#c0392b":ink}}/>
+              </div>
+              <div>
+                <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Land</div>
+                <input value={oppCountry} onChange={e=>setOppCountry(e.target.value)}
+                  placeholder="Land…"
+                  style={{...inp,fontSize:11,padding:"5px 8px",border:`1px solid ${oppCountry?"#c0392b":border}`,color:oppCountry?"#c0392b":ink}}/>
+              </div>
+              <div>
+                <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Viktklass</div>
+                <select value={oppWeight} onChange={e=>setOppWeight(e.target.value)}
+                  style={{...inp,fontSize:11,padding:"5px 6px",cursor:"pointer",border:`1px solid ${oppWeight?"#c0392b":border}`,color:oppWeight?"#c0392b":mid}}>
+                  <option value="">— Vikt —</option>
+                  {["-60kg","-66kg","-73kg","-81kg","-90kg","-100kg","+100kg","-48kg","-52kg","-57kg","-63kg","-70kg","-78kg","+78kg"].map(w=>(
+                    <option key={w} value={w}>{w}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {(oppName||oppCountry||oppWeight) && (
+              <div style={{marginTop:8,paddingTop:8,borderTop:`1px solid ${border}`,display:"flex",gap:6,flexWrap:"wrap",alignItems:"center"}}>
+                {oppName&&<span style={{fontSize:"0.72rem",fontWeight:700,color:"#c0392b"}}>{oppName}</span>}
+                {oppCountry&&<span style={{fontSize:"0.65rem",color:mid}}>{oppCountry}</span>}
+                {oppWeight&&<span style={{fontSize:"0.65rem",fontWeight:600,background:"#fde8e6",color:"#c0392b",padding:"2px 7px",borderRadius:3}}>{oppWeight}</span>}
+              </div>
+            )}
+          </div>
+
+          {/* Grepp-jämförelse överst */}
+          <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:8,padding:"0.8rem 1rem",marginBottom:12}}>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"1rem"}}>
+              {/* Ditt stans + grepp */}
+              <div>
+                <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:4}}>Din stans &amp; Kumikata</div>
+                {stance && <div style={{fontSize:"0.68rem",fontWeight:700,background:ink,color:paper,padding:"2px 8px",borderRadius:4,display:"inline-block",marginBottom:4}}>{stance==="höger"?"► Höger":"◄ Vänster"}</div>}
+                <div style={{fontSize:"0.72rem",fontWeight:700,background:"#fdf8ee",color:gold,padding:"4px 8px",borderRadius:4,border:`1px solid ${gold}40`,minHeight:28,display:"flex",alignItems:"center"}}>
+                  {favGrepp || <span style={{color:mid,fontWeight:400,fontStyle:"italic"}}>Ej valt</span>}
+                </div>
+              </div>
+              {/* Motståndarens stans + grepp */}
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700,marginBottom:2}}>Motståndarens stans &amp; grepp</div>
+                {/* Stans */}
+                <div style={{display:"flex",gap:4}}>
+                  {["Höger","Vänster"].map(s=>(
+                    <button key={s} onClick={()=>setOppStance(oppStance===s.toLowerCase()?"":s.toLowerCase())}
+                      style={{fontFamily:"'Courier New',monospace",fontSize:"0.6rem",padding:"3px 8px",borderRadius:4,cursor:"pointer",fontWeight:oppStance===s.toLowerCase()?700:400,background:oppStance===s.toLowerCase()?"#c0392b":"transparent",color:oppStance===s.toLowerCase()?paper:"#c0392b",border:`1.5px solid #c0392b`,transition:"all 0.12s"}}>
+                      {s==="Höger"?"► H":"◄ V"}
+                    </button>
+                  ))}
+                </div>
+                {/* Grepp */}
+                <select value={oppGrepp} onChange={e=>setOppGrepp(e.target.value)}
+                  style={{width:"100%",padding:"4px 8px",fontSize:11,background:paper,border:`1.5px solid ${oppGrepp?"#c0392b":border}`,borderRadius:4,color:oppGrepp?"#c0392b":mid,outline:"none",fontFamily:"'Courier New',monospace",cursor:"pointer",fontWeight:oppGrepp?700:400}}>
+                  <option value="">— Välj grepp —</option>
+                  {UKE_GREPP.map(g=><option key={g} value={g}>{g}</option>)}
+                </select>
+              </div>
+            </div>
+            {/* Counter suggestions */}
+            {oppGrepp && (()=>{
+              const counterIds = KUMI_TIPS[favGrepp]?.[oppGrepp] || (stance==="höger" ? KUMI_TIPS["Höger kumi (krage + ärm)"]?.[oppGrepp] : KUMI_TIPS["Vänster kumi (krage + ärm)"]?.[oppGrepp]) || [];
+              const counters = counterIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+              if(!counters.length) return null;
+              return (
+                <div style={{marginTop:10,paddingTop:10,borderTop:`1px solid ${border}`}}>
+                  <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:green,fontWeight:700,marginBottom:6}}>★ Mottekniker mot {oppGrepp}</div>
+                  <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                    {counters.map(t=>{const cc=CAT_COLOR[t.cat];return(
+                      <span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}
+                        style={{fontSize:"0.65rem",fontWeight:700,background:cc.tag,color:cc.dot,padding:"3px 8px",borderRadius:4,cursor:"pointer",border:`1px solid ${cc.dot}40`}}>
+                        {t.sv}
+                      </span>
+                    );})}
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Motståndares teknik */}
+          <div style={{marginBottom:16}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid,fontWeight:700,marginBottom:8}}>Motståndares startteknik</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:"0.3rem",marginBottom:6}}>
+              {["all",...CATS].map(c=>(
+                <button key={c} onClick={()=>setOppFilterCat(c)}
+                  style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"3px 8px",borderRadius:3,cursor:"pointer",textTransform:"uppercase",letterSpacing:"0.05em",fontWeight:oppFilterCat===c?700:400,background:oppFilterCat===c?ink:"transparent",color:oppFilterCat===c?paper:mid,border:`1px solid ${oppFilterCat===c?ink:border}`}}>
+                  {c==="all"?"Alla":CAT_NAMES[c]}
+                </button>
+              ))}
+            </div>
+            <div style={{display:"flex",gap:"0.8rem",alignItems:"flex-start",flexWrap:"wrap"}}>
+              <aside style={{width:"100%",maxWidth:200,flexShrink:0,background:paper,border:`1.5px solid ${border}`,padding:"0.6rem",overflowY:"scroll",maxHeight:"55vh",WebkitOverflowScrolling:"touch"}}>
+                <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,marginBottom:"0.4rem",paddingBottom:"0.3rem",borderBottom:`1px solid ${border}`}}>Välj upp till 2 tekniker</div>
+                {CATS.filter(c=>oppFilterCat==="all"||c===oppFilterCat).map(cat=>{
+                  const items=techniques.filter(t=>t.cat===cat);
+                  const cc=CAT_COLOR[cat];
+                  return (
+                    <div key={cat}>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:cc.dot,padding:"0.35rem 0 0.15rem",fontWeight:700}}>{CAT_NAMES[cat]}</div>
+                      {items.map(t=>(
+                        <div key={t.id}
+                          onClick={()=>{
+                            setOppTechIds(prev=>{
+                              if(prev.includes(t.id)) return prev.filter(id=>id!==t.id);
+                              if(prev.length>=2) return [...prev.slice(1),t.id];
+                              return [...prev,t.id];
+                            });
+                          }}
+                          style={{padding:"0.35rem 0.4rem",cursor:"pointer",borderLeft:`3px solid ${oppTechIds.includes(t.id)?"#c0392b":"transparent"}`,background:oppTechIds.includes(t.id)?"#fde8e6":"transparent",fontSize:"0.7rem",fontWeight:oppTechIds.includes(t.id)?700:400,borderRadius:"0 3px 3px 0",marginBottom:"0.1rem",transition:"all 0.1s",display:"flex",alignItems:"center",gap:4}}>
+                          {oppTechIds.includes(t.id)&&<span style={{fontSize:"0.5rem",color:"#c0392b"}}>●{oppTechIds.indexOf(t.id)+1}</span>}
+                          {t.sv}
+                        </div>
+                      ))}
+                    </div>
+                  );
+                })}
+              </aside>
+
+              {/* Selected opp tech info */}
+              {oppTechs.length>0 && (
+                <div style={{flex:1,minWidth:200,display:"flex",flexDirection:"column",gap:8}}>
+                  {oppTechs.map((ot,idx)=>{
+                    const cc=CAT_COLOR[ot.cat];
+                    const km=kumikata[ot.id];
+                    const oppOut=combos.filter(c=>c.from===ot.id);
+                    return (
+                      <div key={ot.id} style={{background:paper,border:`1.5px solid #c0392b40`,borderLeft:"3px solid #c0392b",borderRadius:6,padding:"0.8rem"}}>
+                        <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700,marginBottom:4}}>●{idx+1} Motståndare valt</div>
+                        <div style={{fontSize:"1rem",fontWeight:700,marginBottom:6}}>{ot.sv}</div>
+                        {km && (
+                          <div style={{background:"#fde8e6",borderRadius:5,padding:"6px 8px",marginBottom:6,fontSize:"0.62rem"}}>
+                            <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700,marginBottom:3}}>Kumikata</div>
+                            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.4rem"}}>
+                              <div><span style={{fontSize:"0.46rem",textTransform:"uppercase",color:"#8a4a2c",fontWeight:700,display:"block"}}>Tori höger</span>{km.toriH}</div>
+                              <div><span style={{fontSize:"0.46rem",textTransform:"uppercase",color:"#8a4a2c",fontWeight:700,display:"block"}}>Tori vänster</span>{km.toriV}</div>
+                            </div>
+                          </div>
+                        )}
+                        {oppOut.length>0 && (
+                          <div>
+                            <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:4}}>Vanliga kombinationer</div>
+                            <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                              {oppOut.slice(0,4).map(c=>{
+                                const to=techniques.find(t=>t.id===c.to);
+                                if(!to) return null;
+                                const tcc=CAT_COLOR[to.cat];
+                                return <span key={c.to} style={{fontSize:"0.6rem",background:tcc.tag,color:tcc.dot,padding:"2px 6px",borderRadius:3,fontWeight:600}}>{to.sv}</span>;
+                              })}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </div>
+
+
+
+          {/* Next */}
+          <div style={{display:"flex",justifyContent:"flex-end"}}>
+            <button onClick={()=>setMainTab("foruts")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"8px 16px",borderRadius:5,cursor:"pointer",background:red,border:`1px solid ${red}`,color:"#fff",fontWeight:700,letterSpacing:"0.06em"}}>Nästa → Tori vs Uke</button>
+          </div>
+        </div>
+      )}
+
+      {/* ══ FÖRUTSÄTTNINGAR ══ */}
+      {mainTab==="foruts" && (
+        <div style={{maxWidth:600,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+          <div style={{fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid,marginBottom:12}}>Din profil mot motståndaren</div>
+
+          {/* Jämförelsetabell */}
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:0,borderRadius:8,overflow:"hidden",border:`1.5px solid ${border}`,marginBottom:12}}>
+            {/* Header */}
+            <div style={{background:ink,color:paper,padding:"8px 12px",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Du</div>
+            <div style={{background:"#c0392b",color:paper,padding:"8px 12px",fontSize:"0.6rem",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700}}>Motståndare</div>
+
+            {/* Stans */}
+            <div style={{background:paper,padding:"8px 12px",borderTop:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Stans</div>
+              <div style={{fontSize:"0.78rem",fontWeight:700}}>{stance?`${stance==="höger"?"► Höger":"◄ Vänster"}`:<span style={{color:mid,fontStyle:"italic",fontWeight:400}}>Ej valt</span>}</div>
+            </div>
+            <div style={{background:"#fdf5f5",padding:"8px 12px",borderTop:`1px solid ${border}`,borderLeft:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Stans</div>
+              {oppStance?<div style={{fontSize:"0.78rem",fontWeight:700}}>{oppStance==="höger"?"► Höger":"◄ Vänster"}</div>:<div style={{fontSize:"0.78rem",fontWeight:400,color:mid,fontStyle:"italic"}}>Okänd</div>}
+            </div>
+
+            {/* Kumikata */}
+            <div style={{background:paper,padding:"8px 12px",borderTop:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Kumikata</div>
+              <div style={{fontSize:"0.72rem",fontWeight:700,color:gold}}>{favGrepp||<span style={{color:mid,fontStyle:"italic",fontWeight:400}}>Ej valt</span>}</div>
+            </div>
+            <div style={{background:"#fdf5f5",padding:"8px 12px",borderTop:`1px solid ${border}`,borderLeft:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Kumikata</div>
+              <div style={{fontSize:"0.72rem",fontWeight:700,color:"#c0392b"}}>{oppGrepp||<span style={{color:mid,fontStyle:"italic",fontWeight:400}}>Ej valt</span>}</div>
+            </div>
+
+            {/* Standard tekniker */}
+            <div style={{background:paper,padding:"8px 12px",borderTop:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Standard tekniker</div>
+              {standardTechs.length>0
+                ?standardTechs.map((t,i)=>{const cc=CAT_COLOR[t.cat];return(<div key={t.id} style={{display:"flex",alignItems:"center",gap:4,marginBottom:2}}><span style={{fontSize:"0.55rem",color:"#c0392b",fontWeight:700}}>●{i+1}</span><span style={{fontSize:"0.72rem",fontWeight:700,background:cc.bg,color:cc.dot,padding:"1px 6px",borderRadius:3}}>{t.sv}</span></div>);})
+                :<span style={{color:mid,fontStyle:"italic",fontSize:"0.65rem"}}>Ej valt</span>}
+            </div>
+            <div style={{background:"#fdf5f5",padding:"8px 12px",borderTop:`1px solid ${border}`,borderLeft:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Standard tekniker</div>
+              {oppTechs.length>0
+                ?oppTechs.map((t,i)=>{const cc=CAT_COLOR[t.cat];return(<div key={t.id} style={{display:"flex",alignItems:"center",gap:4,marginBottom:2}}><span style={{fontSize:"0.55rem",color:"#c0392b",fontWeight:700}}>●{i+1}</span><span style={{fontSize:"0.72rem",fontWeight:700,background:"#fde8e6",color:"#c0392b",padding:"1px 6px",borderRadius:3}}>{t.sv}</span></div>);})
+                :<span style={{color:mid,fontStyle:"italic",fontSize:"0.65rem"}}>Ej valt</span>}
+            </div>
+
+            {/* Kombination */}
+            <div style={{background:paper,padding:"8px 12px",borderTop:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Vald kombination</div>
+              {selectedComboTech
+                ?<span style={{fontSize:"0.72rem",fontWeight:700,background:CAT_COLOR[selectedComboTech.cat].tag,color:CAT_COLOR[selectedComboTech.cat].dot,padding:"1px 6px",borderRadius:3}}>{selectedComboTech.sv}</span>
+                :<span style={{color:mid,fontStyle:"italic",fontSize:"0.65rem"}}>Ej valt</span>}
+            </div>
+            <div style={{background:"#fdf5f5",padding:"8px 12px",borderTop:`1px solid ${border}`,borderLeft:`1px solid ${border}`}}>
+              <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:3}}>Vanliga kombinationer</div>
+              {oppTechs.length>0?(()=>{
+                const oppCombos=combos.filter(c=>oppTechIds.includes(c.from)).slice(0,3);
+                return oppCombos.length>0
+                  ?<div style={{display:"flex",flexWrap:"wrap",gap:3}}>{oppCombos.map(c=>{const to=techniques.find(t=>t.id===c.to);if(!to)return null;const cc=CAT_COLOR[to.cat];return <span key={c.to+c.from} style={{fontSize:"0.6rem",background:"#fde8e6",color:"#c0392b",padding:"1px 5px",borderRadius:3,fontWeight:600}}>{to.sv}</span>;})}</div>
+                  :<span style={{color:mid,fontStyle:"italic",fontSize:"0.65rem"}}>Inga</span>
+              })():<span style={{color:mid,fontStyle:"italic",fontSize:"0.65rem"}}>Ej valt</span>}
+            </div>
+          </div>
+
+          {/* Mottekniker-analys */}
+          {favGrepp && oppGrepp && (()=>{
+            const counterIds = KUMI_TIPS[favGrepp]?.[oppGrepp] || [];
+            const counters = counterIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+            return counters.length>0 ? (
+              <div style={{background:"#f0fae8",border:`1.5px solid ${green}`,borderRadius:8,padding:"0.9rem 1rem",marginBottom:12}}>
+                <div style={{fontSize:"0.58rem",textTransform:"uppercase",letterSpacing:"0.1em",color:green,fontWeight:700,marginBottom:8,display:"flex",alignItems:"center",gap:"0.5rem"}}>
+                  ★ Dina bästa mottekniker
+                  <div style={{flex:1,height:1,background:"#b8e0a0"}}/>
+                </div>
+                <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(140px,1fr))",gap:6}}>
+                  {counters.map((t,i)=>{
+                    const cc=CAT_COLOR[t.cat];
+                    return (
+                      <div key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}
+                        style={{display:"flex",alignItems:"center",gap:6,padding:"6px 8px",background:paper,border:`1px solid ${border}`,borderLeft:`3px solid ${cc.dot}`,borderRadius:4,cursor:"pointer"}}>
+                        <div style={{width:18,height:18,borderRadius:"50%",background:cc.tag,display:"flex",alignItems:"center",justifyContent:"center",fontSize:9,fontWeight:700,color:cc.dot,flexShrink:0}}>{i+1}</div>
+                        <div>
+                          <div style={{fontSize:"0.7rem",fontWeight:700}}>{t.sv}</div>
+                          <div style={{fontSize:"0.5rem",textTransform:"uppercase",color:cc.dot}}>{CAT_NAMES[t.cat]}</div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ) : null;
+          })()}
+
+          {/* Ashi-waza öppning */}
+          {standardTechs.some(t=>t.cat==="ashi-waza") && (
+            <div style={{background:"#f5f9ff",border:"1.5px solid #2c5f8a",borderRadius:8,padding:"0.9rem 1rem",marginBottom:12}}>
+              <div style={{fontSize:"0.58rem",textTransform:"uppercase",letterSpacing:"0.1em",color:"#2c5f8a",fontWeight:700,marginBottom:8}}>
+                ↗ Ashi-waza öppnar upp Te-waza &amp; Koshi-waza
+              </div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                {techniques.filter(t=>t.cat==="te-waza"||t.cat==="koshi-waza").slice(0,8).map(t=>{
+                  const cc=CAT_COLOR[t.cat];
+                  return <span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}} style={{fontSize:"0.65rem",fontWeight:700,background:cc.tag,color:cc.dot,padding:"3px 8px",borderRadius:4,cursor:"pointer",border:`1px solid ${cc.dot}40`}}>{t.sv}</span>;
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* Next */}
+          <div style={{display:"flex",justifyContent:"flex-end",marginTop:4}}>
+            <button onClick={()=>setMainTab("strategi")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"8px 16px",borderRadius:5,cursor:"pointer",background:red,border:`1px solid ${red}`,color:"#fff",fontWeight:700,letterSpacing:"0.06em"}}>Nästa → Strategi & Taktik</button>
+          </div>
+        </div>
+      )}
+
+      {/* ══ STRATEGI & TAKTIK ══ */}
+      {mainTab==="strategi" && (
+        <div style={{maxWidth:580,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+
+          {/* Sammandrag-banner */}
+          {(stance||favGrepp||standardTechs.length>0) && (
+            <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:7,padding:"6px 10px",marginBottom:12,display:"flex",flexWrap:"wrap",gap:5,alignItems:"center"}}>
+              {stance&&<span style={{fontSize:"0.6rem",fontWeight:700,background:ink,color:paper,padding:"2px 7px",borderRadius:3}}>{stance==="höger"?"► Höger":"◄ Vänster"}</span>}
+              {favGrepp&&<span style={{fontSize:"0.6rem",background:"#fdf8ee",color:gold,padding:"2px 7px",borderRadius:3,fontWeight:600}}>{favGrepp}</span>}
+              {standardTechs.map((t,i)=>{const cc=CAT_COLOR[t.cat];return <span key={t.id} style={{fontSize:"0.6rem",fontWeight:700,background:cc.bg,color:cc.dot,padding:"2px 7px",borderRadius:3}}>●{i+1} {t.sv}</span>;})}
+            </div>
+          )}
+
+          {/* Strategiblock */}
+          <StrategiBlock
+            stance={stance} favGrepp={favGrepp}
+            standardTechs={standardTechs} selectedComboTech={selectedComboTech}
+            oppTechs={oppTechs} oppGrepp={oppGrepp} oppStance={oppStance}
+            recIds={recIds}
+            setSelectedId={setSelectedId} setMainTab={setMainTab}
+            ink={ink} mid={mid} border={border} red={red} gold={gold} green={green} paper={paper} bg={bg}
+          />
+
+          {/* Next */}
+          <div style={{display:"flex",justifyContent:"flex-end",marginTop:12}}>
+            <button onClick={()=>setMainTab("matchanalys")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"8px 16px",borderRadius:5,cursor:"pointer",background:red,border:`1px solid ${red}`,color:"#fff",fontWeight:700,letterSpacing:"0.06em"}}>Nästa → Match Analys</button>
+          </div>
+        </div>
+      )}
+
+      {/* ══ MATCH ANALYS ══ */}
+      {mainTab==="matchanalys" && (
+        <div style={{maxWidth:580,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+
+          {/* Match result */}
+          <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:8,padding:"0.9rem 1rem",marginBottom:10}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:8}}>Matchresultat</div>
+            <div style={{display:"flex",gap:8,flexWrap:"wrap",alignItems:"flex-start"}}>
+              {/* Poäng med smarta regler */}
+              {(()=>{
+                // Auto-rules
+                const myIpponTotal  = matchScore.my  + (matchScore.myWazari  >= 2 ? 1 : 0);
+                const oppIpponTotal = matchScore.opp + (matchScore.oppWazari >= 2 ? 1 : 0) + (matchScore.myShido >= 3 ? 1 : 0);
+                const myLostShido   = matchScore.myShido  >= 3;
+                const oppLostShido  = matchScore.oppShido >= 3;
+
+                // Auto-set result
+                if(myIpponTotal >= 1 && oppIpponTotal === 0 && matchResult !== "win")  setMatchResult("win");
+                if(oppIpponTotal >= 1 && myIpponTotal === 0 && matchResult !== "loss") setMatchResult("loss");
+
+                const ScoreRow = ({label, colLabel, val, max, onDec, onInc, color, accentBg}) => {
+                  const atMax = val >= max;
+                  const locked = atMax;
+                  return (
+                    <div>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:colLabel||mid,marginBottom:4}}>{label}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <button onClick={onDec} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${border}`,color:ink,lineHeight:"24px"}}>−</button>
+                        <span style={{fontSize:"1.2rem",fontWeight:700,minWidth:28,textAlign:"center",color:color||ink}}>{val}</span>
+                        <button onClick={onInc} disabled={locked} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:locked?"not-allowed":"pointer",background:locked?"#ccc":accentBg||ink,border:`1px solid ${locked?"#ccc":accentBg||ink}`,color:paper,lineHeight:"24px",opacity:locked?0.5:1}}>+</button>
+                        {atMax && <span style={{fontSize:"0.5rem",color:color,fontWeight:700}}>MAX</span>}
+                      </div>
+                    </div>
+                  );
+                };
+
+                return (
+                <div style={{flex:1,minWidth:160}}>
+                  <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:8}}>
+                    {/* Ippon */}
+                    <ScoreRow label="Mina ippon" val={matchScore.my} max={1} color={ink}
+                      colLabel={mid} accentBg={ink}
+                      onDec={()=>setMatchScore(p=>({...p,my:Math.max(0,p.my-1)}))}
+                      onInc={()=>setMatchScore(p=>({...p,my:Math.min(1,p.my+1)}))}/>
+                    <ScoreRow label="Motståndarens ippon" val={matchScore.opp} max={1} color="#c0392b"
+                      colLabel="#c0392b" accentBg="#c0392b"
+                      onDec={()=>setMatchScore(p=>({...p,opp:Math.max(0,p.opp-1)}))}
+                      onInc={()=>setMatchScore(p=>({...p,opp:Math.min(1,p.opp+1)}))}/>
+                    {/* Waza-ari */}
+                    <div>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:4}}>Mina waza-ari {matchScore.myWazari>=2&&<span style={{color:"#3B7A18",fontWeight:700}}>→ IPPON!</span>}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <button onClick={()=>setMatchScore(p=>({...p,myWazari:Math.max(0,p.myWazari-1)}))} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${border}`,color:ink,lineHeight:"24px"}}>−</button>
+                        <span style={{fontSize:"1.2rem",fontWeight:700,minWidth:28,textAlign:"center",color:matchScore.myWazari>=2?"#3B7A18":ink}}>{matchScore.myWazari}</span>
+                        <button onClick={()=>setMatchScore(p=>({...p,myWazari:Math.min(2,p.myWazari+1)}))} disabled={matchScore.myWazari>=2} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:matchScore.myWazari>=2?"not-allowed":"pointer",background:matchScore.myWazari>=2?"#ccc":ink,border:`1px solid ${matchScore.myWazari>=2?"#ccc":ink}`,color:paper,lineHeight:"24px",opacity:matchScore.myWazari>=2?0.5:1}}>+</button>
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#c0392b",marginBottom:4}}>Motståndarens waza-ari {matchScore.oppWazari>=2&&<span style={{fontWeight:700}}>→ IPPON!</span>}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <button onClick={()=>setMatchScore(p=>({...p,oppWazari:Math.max(0,p.oppWazari-1)}))} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${border}`,color:ink,lineHeight:"24px"}}>−</button>
+                        <span style={{fontSize:"1.2rem",fontWeight:700,minWidth:28,textAlign:"center",color:matchScore.oppWazari>=2?"#c0392b":ink}}>{matchScore.oppWazari}</span>
+                        <button onClick={()=>setMatchScore(p=>({...p,oppWazari:Math.min(2,p.oppWazari+1)}))} disabled={matchScore.oppWazari>=2} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:matchScore.oppWazari>=2?"not-allowed":"pointer",background:matchScore.oppWazari>=2?"#ccc":"#c0392b",border:`1px solid ${matchScore.oppWazari>=2?"#ccc":"#c0392b"}`,color:paper,lineHeight:"24px",opacity:matchScore.oppWazari>=2?0.5:1}}>+</button>
+                      </div>
+                    </div>
+                    {/* Yuko */}
+                    <ScoreRow label="Mina yuko" val={matchScore.myYuko} max={99} color="#b8860b"
+                      colLabel="#b8860b" accentBg="#b8860b"
+                      onDec={()=>setMatchScore(p=>({...p,myYuko:Math.max(0,p.myYuko-1)}))}
+                      onInc={()=>setMatchScore(p=>({...p,myYuko:p.myYuko+1}))}/>
+                    <ScoreRow label="Motståndarens yuko" val={matchScore.oppYuko} max={99} color="#b8860b"
+                      colLabel="#b8860b" accentBg="#b8860b"
+                      onDec={()=>setMatchScore(p=>({...p,oppYuko:Math.max(0,p.oppYuko-1)}))}
+                      onInc={()=>setMatchScore(p=>({...p,oppYuko:p.oppYuko+1}))}/>
+                    {/* Shido */}
+                    <div>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#6a2c8a",marginBottom:4}}>Mina shido {matchScore.myShido>=3&&<span style={{color:"#c0392b",fontWeight:700}}>→ FÖRLUST!</span>}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <button onClick={()=>setMatchScore(p=>({...p,myShido:Math.max(0,p.myShido-1)}))} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${border}`,color:ink,lineHeight:"24px"}}>−</button>
+                        <span style={{fontSize:"1.1rem",fontWeight:700,minWidth:28,textAlign:"center",color:matchScore.myShido>=3?"#c0392b":"#6a2c8a"}}>{matchScore.myShido}</span>
+                        <button onClick={()=>setMatchScore(p=>({...p,myShido:Math.min(3,p.myShido+1)}))} disabled={matchScore.myShido>=3} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:matchScore.myShido>=3?"not-allowed":"pointer",background:matchScore.myShido>=3?"#ccc":"#6a2c8a",border:`1px solid ${matchScore.myShido>=3?"#ccc":"#6a2c8a"}`,color:paper,lineHeight:"24px",opacity:matchScore.myShido>=3?0.5:1}}>+</button>
+                        {[0,1,2].map(n=><span key={n} style={{width:8,height:8,borderRadius:"50%",background:n<matchScore.myShido?"#6a2c8a":"#e0d8cc",display:"inline-block"}}/>)}
+                      </div>
+                    </div>
+                    <div>
+                      <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#6a2c8a",marginBottom:4}}>Motståndarens shido {matchScore.oppShido>=3&&<span style={{color:"#3B7A18",fontWeight:700}}>→ DIN VINST!</span>}</div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <button onClick={()=>setMatchScore(p=>({...p,oppShido:Math.max(0,p.oppShido-1)}))} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${border}`,color:ink,lineHeight:"24px"}}>−</button>
+                        <span style={{fontSize:"1.1rem",fontWeight:700,minWidth:28,textAlign:"center",color:matchScore.oppShido>=3?"#3B7A18":"#6a2c8a"}}>{matchScore.oppShido}</span>
+                        <button onClick={()=>setMatchScore(p=>({...p,oppShido:Math.min(3,p.oppShido+1)}))} disabled={matchScore.oppShido>=3} style={{fontFamily:"'Courier New',monospace",fontSize:14,padding:"0 8px",borderRadius:3,cursor:matchScore.oppShido>=3?"not-allowed":"pointer",background:matchScore.oppShido>=3?"#ccc":"#6a2c8a",border:`1px solid ${matchScore.oppShido>=3?"#ccc":"#6a2c8a"}`,color:paper,lineHeight:"24px",opacity:matchScore.oppShido>=3?0.5:1}}>+</button>
+                        {[0,1,2].map(n=><span key={n} style={{width:8,height:8,borderRadius:"50%",background:n<matchScore.oppShido?"#6a2c8a":"#e0d8cc",display:"inline-block"}}/>)}
+                      </div>
+                    </div>
+                  </div>
+                  {/* Auto-result banner */}
+                  {(matchScore.myWazari>=2||matchScore.oppWazari>=2||matchScore.myShido>=3||matchScore.oppShido>=3||matchScore.my>=1||matchScore.opp>=1) && (
+                    <div style={{marginTop:10,padding:"6px 10px",borderRadius:5,background:
+                      (matchScore.my>=1||matchScore.myWazari>=2||matchScore.oppShido>=3)?"#DFF2D0":
+                      (matchScore.opp>=1||matchScore.oppWazari>=2||matchScore.myShido>=3)?"#fde8e6":"#f5f0e8",
+                      border:`1px solid ${(matchScore.my>=1||matchScore.myWazari>=2||matchScore.oppShido>=3)?"#3B7A18":(matchScore.opp>=1||matchScore.oppWazari>=2||matchScore.myShido>=3)?"#c0392b":"#e0d8cc"}`,
+                      fontSize:"0.72rem",fontWeight:700,textAlign:"center",
+                      color:(matchScore.my>=1||matchScore.myWazari>=2||matchScore.oppShido>=3)?"#27500A":
+                            (matchScore.opp>=1||matchScore.oppWazari>=2||matchScore.myShido>=3)?"#c0392b":ink}}>
+                      {(matchScore.my>=1||matchScore.myWazari>=2||matchScore.oppShido>=3) ? "✓ IPPON — DIN VINST" :
+                       (matchScore.opp>=1||matchScore.oppWazari>=2||matchScore.myShido>=3) ? "✗ IPPON — FÖRLUST" : ""}
+                    </div>
+                  )}
+                </div>
+                );
+              })()}
+              {/* Result badge */}
+              <div style={{display:"flex",flexDirection:"column",gap:5,minWidth:100}}>
+                <div style={{fontSize:"0.48rem",textTransform:"uppercase",color:mid,marginBottom:2}}>Matchresultat</div>
+                {["win","loss"].map(r=>(
+                  <button key={r} onClick={()=>setMatchResult(matchResult===r?"":r)}
+                    style={{fontFamily:"'Courier New',monospace",fontSize:"0.62rem",padding:"4px 8px",borderRadius:4,cursor:"pointer",fontWeight:matchResult===r?700:400,
+                      background:matchResult===r?(r==="win"?"#3B7A18":r==="loss"?"#c0392b":"#909088"):"transparent",
+                      color:matchResult===r?paper:(r==="win"?"#3B7A18":r==="loss"?"#c0392b":"#606060"),
+                      border:`1.5px solid ${r==="win"?"#3B7A18":r==="loss"?"#c0392b":"#909088"}`,
+                      transition:"all 0.12s"}}>
+                    {r==="win"?"✓ Vinst":"✗ Förlust"}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Matchfas */}
+          <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:8,padding:"0.9rem 1rem",marginBottom:10}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:8}}>Matchfas & taktik</div>
+            <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:8}}>
+              {[["early","Tidig fas","Etablera grepp, känn av"],["mid","Mittfas","Attackera, kombinationer"],["late","Slutfas","Håll tätt eller avgör"]].map(([id,label,desc])=>(
+                <div key={id} onClick={()=>setMatchPhase(matchPhase===id?"":id)}
+                  style={{flex:1,minWidth:90,padding:"8px 8px",borderRadius:6,cursor:"pointer",border:`1.5px solid ${matchPhase===id?ink:border}`,background:matchPhase===id?"#1a1410":"transparent",transition:"all 0.12s"}}>
+                  <div style={{fontSize:"0.65rem",fontWeight:700,color:matchPhase===id?paper:ink,marginBottom:2}}>{label}</div>
+                  <div style={{fontSize:"0.55rem",color:matchPhase===id?"#a0a090":mid}}>{desc}</div>
+                </div>
+              ))}
+            </div>
+            {matchPhase && (()=>{
+              const tips = {
+                early:["Prioritera kumikata-kontrollen","Testa motståndarens reaktion med lätta attacker","O-soto-gari och De-ashi-harai är bra för att läsa motståndaren"],
+                mid:["Kör din standardkombination fullt ut","Utnyttja ashi-waza för att öppna upp","Om uke är defensiv — pressa med motrörelsekombo"],
+                late:["Vid ledning: kontrollera kumi, undvik risker","Vid underläge: aggressiv ashi-waza, tvinga reaktion","Sista 30 sek: fullspeed på standardtekniken"],
+              };
+              const recT = matchPhase==="early" ? ["o-soto-gari","de-ashi-harai","ko-uchi-gari"] : matchPhase==="mid" ? [...standardTechs.map(t=>t.id), selectedComboTech?.id].filter(Boolean) : standardTechs.map(t=>t.id);
+              const recTechs2 = [...new Set(recT)].map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+              return (
+                <div style={{background:"#f0fae8",border:`1px solid ${green}`,borderRadius:6,padding:"8px 10px"}}>
+                  <ul style={{marginLeft:14,marginBottom:recTechs2.length>0?6:0}}>
+                    {tips[matchPhase].map((p,j)=><li key={j} style={{fontSize:"0.7rem",lineHeight:1.7,color:ink,listStyle:"disc"}}>{p}</li>)}
+                  </ul>
+                  {recTechs2.length>0 && (
+                    <div style={{display:"flex",flexWrap:"wrap",gap:4}}>
+                      {recTechs2.map(t=>{const cc=CAT_COLOR[t.cat];return(<span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}} style={{fontSize:"0.62rem",fontWeight:700,background:cc.tag,color:cc.dot,padding:"2px 6px",borderRadius:3,cursor:"pointer"}}>{t.sv}</span>);})}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
+
+          {/* Anteckningar */}
+          <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:8,padding:"0.9rem 1rem",marginBottom:10}}>
+            <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:8}}>Matchanteckningar</div>
+            {["Vad fungerade bra?","Vad kan förbättras?","Nästa match — fokus på:"].map((placeholder,i)=>(
+              <div key={i} style={{marginBottom:8}}>
+                <div style={{fontSize:"0.5rem",color:mid,marginBottom:3,textTransform:"uppercase"}}>{placeholder}</div>
+                <textarea value={matchNotes[i]} onChange={e=>setMatchNotes(prev=>{const n=[...prev];n[i]=e.target.value;return n;})}
+                  placeholder={placeholder}
+                  style={{width:"100%",padding:"6px 8px",fontSize:11,background:"#faf8f3",border:`1px solid ${border}`,borderRadius:4,color:ink,outline:"none",fontFamily:"'Courier New',monospace",resize:"vertical",minHeight:50,boxSizing:"border-box"}}
+                />
+              </div>
+            ))}
+          </div>
+
+          {/* Reset match */}
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:8,marginTop:4}}>
+            <button onClick={()=>{setMatchScore({my:0,opp:0,myWazari:0,oppWazari:0,myYuko:0,oppYuko:0,myShido:0,oppShido:0});setMatchPhase("");setMatchResult("");setMatchNotes(["","",""]);}}
+              style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"4px 10px",borderRadius:4,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid}}>
+              ↺ Rensa match
+            </button>
+            <button onClick={()=>{
+                const style=document.createElement('style');
+                style.id='print-style';
+                style.innerHTML=`@media print{body{font-family:monospace;background:#fff;color:#000;} nav,button,.no-print{display:none!important;} .print-section{page-break-inside:avoid;}}`;
+                document.head.appendChild(style);
+                window.print();
+                setTimeout(()=>document.getElementById('print-style')?.remove(),1000);
+              }}
+              style={{fontFamily:"'Courier New',monospace",fontSize:"0.65rem",padding:"8px 16px",borderRadius:5,cursor:"pointer",background:"#2c5f8a",border:"1px solid #2c5f8a",color:"#fff",fontWeight:700,letterSpacing:"0.06em"}}>
+              ⬇ Spara match som PDF
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* ══ KAMPKONCEPT ══ */}
+      {mainTab==="koncept" && (
+        <div style={{maxWidth:520,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+          {del1Locked && (
+            <div style={{background:"#fdf8ee",border:`1.5px solid #b8860b`,borderRadius:7,padding:"7px 12px",marginBottom:10,display:"flex",alignItems:"center",gap:8}}>
+              <span style={{fontSize:"0.9rem"}}>🔒</span>
+              <span style={{fontSize:"0.65rem",color:"#b8860b",fontWeight:700}}>Del 1 är låst — kampkonceptet är sparat</span>
+              <button onClick={()=>setDel1Locked(false)} style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"2px 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:"1px solid #b8860b",color:"#b8860b",marginLeft:"auto"}}>🔓 Lås upp</button>
+            </div>
+          )}
+          <KumiBanner/>
+          {/* Spelarinställningar + vald teknik från Teknik-fliken */}
+          {(stance||favGrepp||tech) && (
+            <div style={{background:paper,border:`1.5px solid ${border}`,borderRadius:7,padding:"8px 12px",marginBottom:10}}>
+              <div style={{display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                <span style={{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700}}>Från Teknik-fliken</span>
+                {stance&&<span style={{fontSize:"0.68rem",fontWeight:700,background:ink,color:paper,padding:"2px 8px",borderRadius:4}}>{stance==="höger"?"► Höger":"◄ Vänster"}</span>}
+                {favGrepp&&<span style={{fontSize:"0.68rem",fontWeight:700,background:"#fdf8ee",color:gold,padding:"2px 8px",borderRadius:4,border:`1px solid ${gold}40`}}>{favGrepp}</span>}
+                <button onClick={()=>setMainTab("kombdb")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.55rem",padding:"2px 8px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid,marginLeft:"auto"}}>← Ändra</button>
+              </div>
+              {standardTechs.length>0 && (
+                <div style={{marginTop:8,paddingTop:8,borderTop:`1px solid ${border}`,display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                  <span style={{fontSize:"0.52rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700}}>● Standard:</span>
+                  {standardTechs.map((t,i)=>{
+                    const cc=CAT_COLOR[t.cat];
+                    return (
+                      <span key={t.id} style={{fontSize:"0.72rem",fontWeight:700,background:"#fde8e6",color:"#c0392b",padding:"3px 10px",borderRadius:4,border:"1px solid #c0392b40",cursor:"pointer"}}
+                        onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}>
+                        {i+1}. {t.sv}
+                      </span>
+                    );
+                  })}
+                  <button onClick={()=>setStandardTechIds([])} style={{fontFamily:"'Courier New',monospace",fontSize:"0.5rem",padding:"1px 6px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid}}>✕</button>
+                </div>
+              )}
+
+              {standardTechs.length>0 && standardTechs.some(t=>selectedCombos[t.id]) && (
+                <div style={{marginTop:6,paddingTop:6,borderTop:`1px solid ${border}`,display:"flex",flexDirection:"column",gap:4}}>
+                  {standardTechs.map((st,i)=>{
+                    const comboId=selectedCombos[st.id];
+                    const comboTech=techniques.find(t=>t.id===comboId);
+                    if(!comboTech) return null;
+                    const cc2=CAT_COLOR[comboTech.cat];
+                    return (
+                      <div key={st.id} style={{display:"flex",alignItems:"center",gap:6,flexWrap:"wrap"}}>
+                        <span style={{fontSize:"0.52rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700}}>●{i+1}</span>
+                        <span style={{fontSize:"0.65rem",fontWeight:700,color:"#c0392b"}}>{st.sv}</span>
+                        <span style={{color:mid,fontSize:"0.7rem"}}>→</span>
+                        <span style={{fontSize:"0.68rem",fontWeight:700,background:cc2.bg,color:cc2.dot,padding:"2px 8px",borderRadius:4,border:`1px solid ${cc2.dot}40`,cursor:"pointer"}}
+                          onClick={()=>{setSelectedId(comboTech.id);setMainTab("kombdb");}}>
+                          {comboTech.sv}
+                        </span>
+                        <button onClick={()=>setSelectedCombos(p=>{const n={...p};delete n[st.id];return n;})} style={{fontFamily:"'Courier New',monospace",fontSize:"0.5rem",padding:"1px 5px",borderRadius:3,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid}}>✕</button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+              {(oppTech||oppGrepp) && (
+                <div style={{marginTop:6,paddingTop:6,borderTop:`1px solid ${border}`,display:"flex",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+                  <span style={{fontSize:"0.52rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700}}>Motståndare:</span>
+                  {oppName&&<span style={{fontSize:"0.72rem",fontWeight:700,color:"#c0392b"}}>{oppName}</span>}
+                  {oppCountry&&<span style={{fontSize:"0.62rem",color:mid}}>{oppCountry}</span>}
+                  {oppWeight&&<span style={{fontSize:"0.62rem",background:"#fde8e6",color:"#c0392b",padding:"1px 6px",borderRadius:3,fontWeight:600}}>{oppWeight}</span>}
+                  {oppTechs.map((t,i)=><span key={t.id} style={{fontSize:"0.68rem",fontWeight:700,background:"#fde8e6",color:"#c0392b",padding:"2px 8px",borderRadius:4,border:"1px solid #c0392b40",cursor:"pointer"}} onClick={()=>setMainTab("motstand")}>{i+1}. {t.sv}</span>)}
+                  {oppGrepp&&<span style={{fontSize:"0.65rem",color:"#8a4a2c",fontWeight:600,background:"#faeae0",padding:"2px 8px",borderRadius:4}}>{oppGrepp}</span>}
+                  <button onClick={()=>setMainTab("motstand")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.5rem",padding:"1px 6px",borderRadius:3,cursor:"pointer",background:"transparent",border:"1px solid #c0392b",color:"#c0392b"}}>← Ändra</button>
+                </div>
+              )}
+            </div>
+          )}
+          {recTechs.length>0 && (
+            <div style={{background:"#f0fae8",border:`1.5px solid ${green}`,borderRadius:7,padding:"8px 12px",marginBottom:10}}>
+              <div style={{fontSize:"0.52rem",textTransform:"uppercase",color:green,fontWeight:700,marginBottom:6}}>★ Rekommenderade tekniker</div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+                {recTechs.map(t=>{
+                  const cc=CAT_COLOR[t.cat];
+                  return (
+                    <span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}
+                      style={{fontSize:"0.68rem",fontWeight:700,background:cc.tag,color:cc.dot,padding:"3px 8px",borderRadius:4,cursor:"pointer",border:`1px solid ${cc.dot}40`}}>
+                      {t.sv}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+          <div style={{display:"flex",gap:0,marginBottom:0,borderBottom:`1px solid ${border}`,flexWrap:"wrap"}}>
+            {[{id:"sit",label:"Situationer"},{id:"kub",label:"Kubvy"}].map(t=>(
+              <button key={t.id} onClick={()=>setKoncTab(t.id)} style={subBtn(t.id,koncTab)}>{t.label}</button>
+            ))}
+            <button onClick={resetAll} style={{...btn(red),fontSize:"0.55rem",marginLeft:"auto",alignSelf:"center"}}>Rensa</button>
+          </div>
+
+          {/* Sammandrag av val */}
+          {(stance||favGrepp||standardTechs.length>0||selectedComboTech||oppTechs.length>0||oppGrepp) && (
+            <div style={{background:"#f5f0e8",border:`1px solid ${border}`,borderTop:"none",borderRadius:"0 0 6px 6px",padding:"6px 10px",marginBottom:"0.8rem",display:"flex",flexWrap:"wrap",gap:5,alignItems:"center"}}>
+              {stance && (
+                <span style={{fontSize:"0.6rem",fontWeight:700,background:ink,color:paper,padding:"2px 7px",borderRadius:3}}>{stance==="höger"?"► H":"◄ V"}</span>
+              )}
+              {favGrepp && (
+                <span style={{fontSize:"0.6rem",fontWeight:600,background:"#fdf8ee",color:gold,padding:"2px 7px",borderRadius:3,border:`1px solid ${gold}40`}}>{favGrepp}</span>
+              )}
+              {standardTechs.map((t,i)=>{
+                const cc=CAT_COLOR[t.cat];
+                return <span key={t.id} style={{fontSize:"0.6rem",fontWeight:700,background:cc.bg,color:cc.dot,padding:"2px 7px",borderRadius:3,border:`1px solid ${cc.dot}40`}}>●{i+1} {t.sv}</span>;
+              })}
+              {standardTechs.map(st=>{const cid=selectedCombos[st.id];const ct=techniques.find(t=>t.id===cid);if(!ct)return null;const cc=CAT_COLOR[ct.cat];return <span key={st.id} style={{fontSize:"0.6rem",fontWeight:600,background:cc.tag,color:cc.dot,padding:"2px 7px",borderRadius:3}}>→ {ct.sv}</span>;})}
+              {(oppTechs.length>0||oppGrepp||oppStance||oppName) && (
+                <span style={{fontSize:"0.55rem",color:"#c0392b",fontWeight:700,marginLeft:2}}>|</span>
+              )}
+              {oppName&&<span style={{fontSize:"0.6rem",fontWeight:700,color:"#c0392b"}}>{oppName}</span>}
+              {oppWeight&&<span style={{fontSize:"0.6rem",background:"#fde8e6",color:"#c0392b",padding:"2px 6px",borderRadius:3}}>{oppWeight}</span>}
+              {oppStance && (
+                <span style={{fontSize:"0.6rem",fontWeight:700,background:"#c0392b",color:paper,padding:"2px 7px",borderRadius:3}}>{oppStance==="höger"?"► H":"◄ V"}</span>
+              )}
+              {oppGrepp && (
+                <span style={{fontSize:"0.6rem",fontWeight:600,background:"#fde8e6",color:"#c0392b",padding:"2px 7px",borderRadius:3}}>{oppGrepp}</span>
+              )}
+              {oppTechs.map((t,i)=>(
+                <span key={t.id} style={{fontSize:"0.6rem",fontWeight:700,background:"#fde8e6",color:"#c0392b",padding:"2px 7px",borderRadius:3}}>●{i+1} {t.sv}</span>
+              ))}
+            </div>
+          )}
+
+          {koncTab==="sit" && (
+            <div>
+              <div style={{display:"flex",justifyContent:"flex-end",marginBottom:"0.6rem"}}>
+                <button onClick={()=>setShowRef(p=>!p)} style={{...btn("#555"),fontSize:"0.55rem"}}>{showRef?"Dölj referens":"Visa referens"}</button>
+              </div>
+              {LAYER_COLORS.map((c,i)=>{
+                const l=layers[i], ref=REFERENCE[i], isActive=activeRow===i;
+                return (
+                  <div key={i} style={{borderRadius:8,border:`1px solid ${isActive?c.bdr:border}`,background:isActive?c.bg:paper,marginBottom:4,overflow:"hidden",transition:"background .15s"}}>
+                    <div onClick={()=>setActiveRow(isActive?null:i)} style={{display:"flex",alignItems:"center",gap:8,padding:"9px 11px",cursor:"pointer"}}>
+                      <div style={{width:10,height:10,borderRadius:"50%",background:c.rightC,flexShrink:0}}/>
+                      <div style={{flex:1}}>
+                        <div style={{fontSize:11,fontWeight:500,color:isActive?c.tc:ink}}>{l.name||<span style={{opacity:0.35,fontStyle:"italic"}}>Nivå {i+1} — ej ifylld</span>}</div>
+                        {l.sub&&<div style={{fontSize:9,color:isActive?c.tc:mid}}>{l.sub}</div>}
+                      </div>
+                      <div style={{fontSize:12,color:mid,transform:isActive?"rotate(180deg)":"none",transition:"transform .15s"}}>▾</div>
+                    </div>
+                    {isActive && (
+                      <div style={{padding:"0 11px 12px",borderTop:`1px solid ${c.bdr}40`}}>
+                        {showRef && (
+                          <div style={{marginTop:10,marginBottom:10,padding:"9px 11px",background:"rgba(255,255,255,0.6)",borderRadius:6,border:`1px solid ${border}`}}>
+                            <div style={{fontSize:9,fontWeight:700,color:mid,textTransform:"uppercase",letterSpacing:"0.06em",marginBottom:4}}>📋 Referens</div>
+                            <div style={{fontSize:11,fontWeight:600,marginBottom:2}}>{ref.name}</div>
+                            <div style={{fontSize:9,color:mid,marginBottom:5}}>{ref.sub}</div>
+                            <ul style={{marginLeft:13}}>{ref.pts.map((p,j)=>(<li key={j} style={{fontSize:10,lineHeight:1.6,color:"#5a4a3a",listStyle:"disc"}}>{p}</li>))}</ul>
+                          </div>
+                        )}
+                        <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                          <input value={l.name} onChange={e=>updateLayer(i,"name",e.target.value)} style={inp} placeholder="Situationsnamn"/>
+                          <input value={l.sub}  onChange={e=>updateLayer(i,"sub",e.target.value)}  style={inp} placeholder="Underrubrik"/>
+                          <div style={{fontSize:9,fontWeight:600,color:c.tc,marginTop:2}}>Punkter:</div>
+                          {l.pts.map((p,j)=>(
+                            <div key={j} style={{display:"flex",gap:5}}>
+                              <input value={p} onChange={e=>updatePt(i,j,e.target.value)} style={{...inp,flex:1}} placeholder={`Punkt ${j+1}`}/>
+                              {l.pts.length>1&&<button onClick={()=>removePt(i,j)} style={{...btn(red),padding:"3px 7px"}}>✕</button>}
+                            </div>
+                          ))}
+                          <button onClick={()=>addPt(i)} style={{...btn(c.bdr),alignSelf:"flex-start",marginTop:2}}>+ Lägg till punkt</button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {koncTab==="kub" && (
+            <div>
+              {recTechs.length>0 && (
+                <div style={{background:"#f0fae8",border:`1px solid ${green}`,borderRadius:6,padding:"6px 10px",marginBottom:8,display:"flex",flexWrap:"wrap",gap:4,alignItems:"center"}}>
+                  <span style={{fontSize:"0.5rem",textTransform:"uppercase",color:green,fontWeight:700,marginRight:4}}>★ Tekniker</span>
+                  {recTechs.map(t=>{
+                    const cc=CAT_COLOR[t.cat];
+                    return (
+                      <span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}
+                        style={{fontSize:"0.62rem",fontWeight:700,background:cc.tag,color:cc.dot,padding:"2px 7px",borderRadius:4,cursor:"pointer",border:`1px solid ${cc.dot}40`}}>
+                        {t.sv}
+                      </span>
+                    );
+                  })}
+                </div>
+              )}
+              <div style={{display:"flex",gap:8,alignItems:"flex-start"}}>
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center",paddingTop:62,width:22,flexShrink:0,gap:2}}>
+                  <div style={{fontSize:8,fontWeight:700,color:"#27500A",writingMode:"vertical-rl",transform:"rotate(180deg)"}}>Idealläge</div>
+                  <div style={{width:6,height:144,background:"linear-gradient(to bottom,#3B7A18,#C0E898)",borderRadius:3}}/>
+                  <div style={{width:6,height:46,background:"#C0BEB2",borderRadius:3}}/>
+                  <div style={{width:6,height:144,background:"linear-gradient(to bottom,#F0C0A0,#B82020)",borderRadius:3}}/>
+                  <div style={{fontSize:8,fontWeight:700,color:"#6A0A0A",writingMode:"vertical-rl",transform:"rotate(180deg)"}}>Farligt</div>
+                </div>
+                <KubSVG layers={layers} activeRow={activeRow} onRowClick={r=>setActiveRow(r===activeRow?null:r)}/>
+              </div>
+              {activeRow!==null && (()=>{
+                const s=layers[activeRow], ref=REFERENCE[activeRow];
+                return (
+                  <div style={{marginTop:8,borderRadius:8,padding:"11px 13px",background:s.bg,border:`1px solid ${s.bdr}`}}>
+                    <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+                      <div style={{width:12,height:12,borderRadius:"50%",background:s.rightC}}/>
+                      <div style={{fontSize:12,fontWeight:700,color:s.tc}}>Nivå {activeRow+1} — {s.name||<span style={{opacity:0.5,fontStyle:"italic"}}>ej ifylld</span>}</div>
+                    </div>
+                    {s.pts.some(p=>p)
+                      ?<ul style={{marginLeft:14}}>{s.pts.filter(p=>p).map((p,j)=>(<li key={j} style={{fontSize:10,lineHeight:1.65,color:s.tc,listStyle:"disc"}}>{p}</li>))}</ul>
+                      :<div style={{fontSize:10,color:s.tc,opacity:0.5,fontStyle:"italic"}}>Ingen text — fyll i via Situationer</div>}
+                    <div style={{marginTop:8,paddingTop:8,borderTop:`1px solid ${s.bdr}40`}}>
+                      <div style={{fontSize:9,color:s.tc,opacity:0.6,fontWeight:600,marginBottom:3}}>Referens: {ref.name}</div>
+                      <ul style={{marginLeft:14}}>{ref.pts.map((p,j)=>(<li key={j} style={{fontSize:9,lineHeight:1.6,color:s.tc,opacity:0.5,listStyle:"disc"}}>{p}</li>))}</ul>
+                    </div>
+                  </div>
+                );
+              })()}
+              <div style={{fontSize:9,color:mid,textAlign:"center",marginTop:6}}>Klicka på ett lager · Fyll i via Situationer</div>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// KOMBPANEL
+// ═══════════════════════════════════════════════
+function KombPanel({ tech, direkt, motror, outCombos, inCombos, showRev, setSelectedId, ashiFollowUp, recIds, stance, favGrepp, selectedCombos, setSelectedCombos, standardTechIds, del1Locked, awaitingCombo, setAwaitingCombo, ink, mid, border, red, gold, bg }) {
+  const cc=CAT_COLOR[tech.cat], km=kumikata[tech.id], isRec=recIds.includes(tech.id);
+  const selectedComboId = selectedCombos?.[tech.id] || null;
+  const setSelectedComboId = (id) => setSelectedCombos(p=>({...p,[tech.id]:id}));
+  return (
+    <>
+      <div style={{display:"flex",alignItems:"flex-end",gap:"0.7rem",marginBottom:"0.9rem",paddingBottom:"0.8rem",borderBottom:`2px solid ${ink}`}}>
+        <div style={{width:8,height:8,borderRadius:"50%",background:red,flexShrink:0,marginBottom:4}}/>
+        <div style={{flex:1}}>
+          <div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid}}>{CAT_NAMES[tech.cat]}</div>
+          <div style={{fontSize:"clamp(1.2rem,3.5vw,1.8rem)",fontWeight:700,lineHeight:1}}>{tech.sv}</div>
+        </div>
+        {isRec && <span style={{fontSize:"0.6rem",background:"#fdf8ee",color:gold,padding:"3px 8px",borderRadius:4,fontWeight:700,border:`1px solid ${gold}40`}}>★ Rekommenderad</span>}
+        {standardTechIds.includes(tech.id) && <span style={{fontSize:"0.6rem",background:"#fde8e6",color:"#c0392b",padding:"3px 8px",borderRadius:4,fontWeight:700,border:"1px solid #c0392b40"}}>● Standard teknik</span>}
+      </div>
+
+      {/* Stance/grepp context */}
+      {(stance||favGrepp) && (
+        <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:10}}>
+          {stance&&<span style={{fontSize:"0.62rem",background:ink,color:"#f5f0e8",padding:"2px 8px",borderRadius:4,fontWeight:700}}>{stance==="höger"?"► Höger":"◄ Vänster"}</span>}
+          {favGrepp&&<span style={{fontSize:"0.62rem",background:"#fdf8ee",color:gold,padding:"2px 8px",borderRadius:4,fontWeight:600,border:`1px solid ${gold}40`}}>{favGrepp}</span>}
+        </div>
+      )}
+
+      {/* Kumikata */}
+      {km && (
+        <div style={{background:bg,border:`1.5px solid ${border}`,borderLeft:`3px solid ${gold}`,padding:"0.7rem 0.9rem",marginBottom:"1rem"}}>
+          <div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.1em",color:gold,fontWeight:700,marginBottom:"0.6rem"}}>Kumikata (greppning)</div>
+          <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:"0.6rem"}}>
+            <div>
+              <div style={{fontSize:"0.5rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:"0.4rem",paddingBottom:"0.2rem",borderBottom:`1px solid ${border}`}}>Tori</div>
+              <div style={{fontSize:"0.62rem",marginBottom:"0.3rem"}}><span style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#2c5f8a",fontWeight:700,display:"block"}}>Höger hand</span>{km.toriH}</div>
+              <div style={{fontSize:"0.62rem"}}><span style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#2c7a4a",fontWeight:700,display:"block"}}>Vänster hand</span>{km.toriV}</div>
+            </div>
+            <div>
+              <div style={{fontSize:"0.5rem",textTransform:"uppercase",color:mid,fontWeight:700,marginBottom:"0.4rem",paddingBottom:"0.2rem",borderBottom:`1px solid ${border}`}}>Uke</div>
+              <div style={{fontSize:"0.62rem",marginBottom:"0.3rem"}}><span style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#8a4a2c",fontWeight:700,display:"block"}}>Höger sida</span>{km.ukeH}</div>
+              <div style={{fontSize:"0.62rem"}}><span style={{fontSize:"0.48rem",textTransform:"uppercase",color:"#6a2c8a",fontWeight:700,display:"block"}}>Vänster sida</span>{km.ukeV}</div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {direkt.length>0&&(<><Divider>Direkta kombinationer</Divider><div style={{display:"grid",gap:"0.45rem",marginBottom:"1rem"}}>{direkt.map((c,i)=>{const to=techniques.find(t=>t.id===c.to);if(!to)return null;const tcc=CAT_COLOR[to.cat];const isSelCombo=selectedComboId===to.id;return(<ComboCard key={i} accent={isSelCombo?"#b8860b":red} onClick={()=>{setSelectedId(to.id);setSelectedComboId(to.id);}}><span style={{fontWeight:700,fontSize:"0.76rem"}}>{tech.sv}</span><span style={{color:red,margin:"0 0.4rem"}}>→</span><span style={{fontSize:"0.76rem"}}>{to.sv}</span><span style={{fontSize:"0.5rem",textTransform:"uppercase",background:tcc.tag,color:tcc.dot,padding:"0.1rem 0.35rem",borderRadius:2,marginLeft:"0.4rem"}}>{CAT_NAMES[to.cat]}</span><div style={{fontSize:"0.6rem",color:mid,marginTop:"0.15rem"}}>{c.note}</div></ComboCard>);})}</div></>)}
+      {motror.length>0&&(<><Divider>Motrörelse — uke motarbetar</Divider><div style={{display:"grid",gap:"0.45rem",marginBottom:"1rem"}}>{motror.map((c,i)=>{const to=techniques.find(t=>t.id===c.to);if(!to)return null;const tcc=CAT_COLOR[to.cat];const isSelCombo=selectedComboId===to.id;return(<ComboCard key={i} accent={isSelCombo?"#b8860b":mid} onClick={()=>{setSelectedId(to.id);setSelectedComboId(to.id);}}><span style={{fontWeight:700,fontSize:"0.76rem"}}>{tech.sv}</span><span style={{color:mid,margin:"0 0.4rem"}}>↗</span><span style={{fontSize:"0.76rem"}}>{to.sv}</span><span style={{fontSize:"0.5rem",textTransform:"uppercase",background:tcc.tag,color:tcc.dot,padding:"0.1rem 0.35rem",borderRadius:2,marginLeft:"0.4rem"}}>{CAT_NAMES[to.cat]}</span><div style={{fontSize:"0.6rem",color:mid,marginTop:"0.15rem"}}>{c.note}</div></ComboCard>);})}</div></>)}
+
+      {ashiFollowUp.length>0 && (
+        <>
+          <Divider>Standard: Ashi-waza öppnar upp</Divider>
+          <div style={{background:"#f0fae8",border:"1px solid #3B7A18",borderRadius:6,padding:"8px 10px",marginBottom:"1rem"}}>
+            <div style={{fontSize:"0.58rem",color:"#27500A",marginBottom:6}}>Attack med {tech.sv} skapar obalans — följ upp med Te-waza eller Koshi-waza:</div>
+            <div style={{display:"flex",flexWrap:"wrap",gap:5}}>
+              {ashiFollowUp.map(t=>{const tcc=CAT_COLOR[t.cat];return(<span key={t.id} onClick={()=>setSelectedId(t.id)} style={{fontSize:"0.65rem",fontWeight:700,background:tcc.tag,color:tcc.dot,padding:"3px 8px",borderRadius:4,cursor:"pointer",border:`1px solid ${tcc.dot}40`}}>{t.sv}</span>);})}
+            </div>
+          </div>
+        </>
+      )}
+
+      {showRev&&inCombos.length>0&&(<><Divider>Kan föregås av</Divider><div style={{display:"grid",gap:"0.45rem",marginBottom:"1rem"}}>{inCombos.map((c,i)=>{const from=techniques.find(t=>t.id===c.from);if(!from)return null;return(<ComboCard key={i} accent="#3a2a1a" onClick={()=>setSelectedId(from.id)}><span style={{fontWeight:700,fontSize:"0.76rem",color:mid}}>{from.sv}</span><span style={{color:mid,margin:"0 0.4rem"}}>→</span><span style={{fontSize:"0.76rem"}}>{tech.sv}</span><div style={{fontSize:"0.6rem",color:mid,marginTop:"0.15rem"}}>{c.note}</div></ComboCard>);})}</div></>)}
+
+      {outCombos.length===0&&ashiFollowUp.length===0&&<div style={{color:mid,fontSize:"0.72rem",marginTop:"1rem",fontStyle:"italic"}}>Inga kombinationer registrerade.</div>}
+      <div style={{marginTop:"1rem",paddingTop:"0.8rem",borderTop:`1px solid ${border}`,display:"flex",gap:"1.5rem",flexWrap:"wrap"}}>
+        {[["Direkta",direkt.length],["Motrörelse",motror.length],["Totalt",outCombos.length],...(showRev?[["Varifrån",inCombos.length]]:[])].map(([l,n])=>(
+          <div key={l}><div style={{fontSize:"1.2rem",fontWeight:700}}>{n}</div><div style={{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.1em",color:mid}}>{l}</div></div>
+        ))}
+      </div>
+    </>
+  );
+}
+
+// ═══════════════════════════════════════════════
+// KUMIKATA WIZARD
+// ═══════════════════════════════════════════════
+function KumikataWizard({ tori, setTori, uke, setUke, onNavigate, ink, mid, border, gold, green, paper }) {
+  const tipIds = (tori&&uke) ? (KUMI_TIPS[tori]?.[uke]||[]) : [];
+  const tips   = tipIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+  const ukeC   = "#8a4a2c";
+  const sel    = { width:"100%",padding:"7px 10px",fontSize:11,background:paper,border:`1.5px solid ${border}`,borderRadius:6,color:ink,outline:"none",fontFamily:"'Courier New',monospace",cursor:"pointer" };
+  const circ   = (active,col) => ({ width:22,height:22,borderRadius:"50%",background:active?col:"#ccc",display:"flex",alignItems:"center",justifyContent:"center",color:"#fff",fontSize:11,fontWeight:700,flexShrink:0 });
+  return (
+    <div style={{maxWidth:520,margin:"0 auto",padding:"0.8rem 0.5rem"}}>
+      <div style={{marginBottom:16}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+          <div style={circ(!!tori,green)}>1</div>
+          <div style={{fontSize:"0.65rem",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700,color:tori?green:mid}}>Tori — välj ditt grepp</div>
+        </div>
+        <select value={tori} onChange={e=>{setTori(e.target.value);setUke("");}} style={sel}>
+          <option value="">— Välj Tori-grepp —</option>
+          {GREPP_OPTIONS.map(g=><option key={g} value={g}>{g}</option>)}
+        </select>
+      </div>
+      {tori && (
+        <div style={{marginBottom:16}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:6}}>
+            <div style={circ(!!uke,ukeC)}>2</div>
+            <div style={{fontSize:"0.65rem",textTransform:"uppercase",letterSpacing:"0.1em",fontWeight:700,color:uke?ukeC:mid}}>Uke — välj motståndarens grepp</div>
+          </div>
+          <select value={uke} onChange={e=>setUke(e.target.value)} style={{...sel,border:`1.5px solid ${uke?ukeC:border}`}}>
+            <option value="">— Välj Uke-grepp —</option>
+            {UKE_GREPP.map(g=><option key={g} value={g}>{g}</option>)}
+          </select>
+          {uke&&<div style={{marginTop:8,padding:"6px 10px",background:"#faeae0",borderRadius:4,border:`1px solid ${ukeC}40`,fontSize:"0.7rem",color:ukeC,fontWeight:600}}>✓ {uke}</div>}
+        </div>
+      )}
+      {tori&&uke&&(
+        <div style={{borderRadius:8,border:`1.5px solid ${gold}`,background:"#fdf8ee",padding:"0.9rem 1rem"}}>
+          <div style={{fontSize:"0.58rem",textTransform:"uppercase",letterSpacing:"0.12em",color:gold,fontWeight:700,marginBottom:"0.8rem",display:"flex",alignItems:"center",gap:"0.5rem"}}>
+            ★ Rekommenderade tekniker<div style={{flex:1,height:1,background:"#e8d8a0"}}/>
+          </div>
+          {tips.length===0
+            ?<div style={{fontSize:10,color:mid,fontStyle:"italic"}}>Inga tips för denna kombination.</div>
+            :<div style={{display:"flex",flexDirection:"column",gap:6}}>
+              {tips.map((t,i)=>{
+                const cc=CAT_COLOR[t.cat];
+                return (
+                  <div key={t.id} style={{display:"flex",alignItems:"center",gap:10,padding:"8px 10px",background:paper,border:`1px solid ${border}`,borderLeft:`3px solid ${cc.dot}`,borderRadius:4}}>
+                    <div style={{width:20,height:20,borderRadius:"50%",background:cc.tag,display:"flex",alignItems:"center",justifyContent:"center",fontSize:10,fontWeight:700,color:cc.dot,flexShrink:0}}>{i+1}</div>
+                    <div><div style={{fontSize:"0.78rem",fontWeight:700}}>{t.sv}</div><div style={{fontSize:"0.55rem",textTransform:"uppercase",color:cc.dot,marginTop:1}}>{CAT_NAMES[t.cat]}</div></div>
+                  </div>
+                );
+              })}
+            </div>
+          }
+          <div style={{marginTop:14,display:"flex",gap:8,flexWrap:"wrap"}}>
+            <button onClick={()=>onNavigate("koncept")} style={{fontFamily:"'Courier New',monospace",fontSize:"0.6rem",padding:"5px 12px",borderRadius:4,cursor:"pointer",background:green,border:`1px solid ${green}`,color:"#fff",fontWeight:700}}>→ Gå till Kampkoncept</button>
+            <button onClick={()=>{setTori("");setUke("");}} style={{fontFamily:"'Courier New',monospace",fontSize:"0.6rem",padding:"5px 10px",borderRadius:4,cursor:"pointer",background:"transparent",border:`1px solid ${mid}`,color:mid}}>↺ Börja om</button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Divider({children}){return <div style={{fontSize:"0.55rem",textTransform:"uppercase",letterSpacing:"0.12em",color:"#8a7a6a",marginBottom:"0.5rem",display:"flex",alignItems:"center",gap:"0.5rem"}}>{children}<div style={{flex:1,height:1,background:"#e0d8cc"}}/></div>;}
+function ComboCard({children,accent,onClick}){return <div onClick={onClick} style={{background:"#f5f0e8",border:"1.5px solid #e0d8cc",borderLeft:`3px solid ${accent}`,padding:"0.55rem 0.8rem",cursor:"pointer"}} onMouseEnter={e=>e.currentTarget.style.borderColor="#8a7a6a"} onMouseLeave={e=>e.currentTarget.style.borderColor="#e0d8cc"}>{children}</div>;}
+
+// ═══════════════════════════════════════════════
+// STRATEGI & TAKTIK COMPONENT
+// ═══════════════════════════════════════════════
+function StrategiBlock({ stance, favGrepp, standardTechs, selectedComboTech, oppTechs, oppGrepp, oppStance, recIds, setSelectedId, setMainTab, ink, mid, border, red, gold, green, paper, bg }) {
+
+  const hasData = stance||favGrepp||standardTechs.length>0||oppGrepp||oppTechs.length>0;
+
+  // Build strategy points based on selections
+  const strategy = [];
+
+  // Grepp-analys
+  if(favGrepp && oppGrepp) {
+    const counterIds = KUMI_TIPS[favGrepp]?.[oppGrepp] || [];
+    const counters = counterIds.map(id=>techniques.find(t=>t.id===id)).filter(Boolean);
+    strategy.push({
+      title: "Grepp-strategi",
+      icon: "🤜",
+      color: gold,
+      bg: "#fdf8ee",
+      bdr: gold,
+      points: [
+        `Ditt grepp: ${favGrepp}`,
+        `Motståndarens grepp: ${oppGrepp}`,
+        counters.length>0 ? `Utnyttja greppläget med: ${counters.slice(0,3).map(t=>t.sv).join(", ")}` : "Ingen klar fördel — fokus på kuzushi",
+      ],
+      techs: counters.slice(0,3),
+    });
+  }
+
+  // Stans-analys
+  if(stance && oppStance) {
+    const same = stance === oppStance;
+    strategy.push({
+      title: "Stans-analys",
+      icon: "⚖️",
+      color: "#2c5f8a",
+      bg: "#e8f0fa",
+      bdr: "#2c5f8a",
+      points: same
+        ? [
+            `Båda ${stance} — spegelbild`,
+            "O-uchi-gari och Ko-uchi-gari fungerar bra i spegelläge",
+            "De-ashi-harai är effektiv när stansen är synkad",
+          ]
+        : [
+            `Du ${stance}, motståndaren ${oppStance} — korsläge`,
+            "O-soto-gari är stark mot kors-stans",
+            "Tai-otoshi och Seoi-nage utnyttjar kors-grepp effektivt",
+          ],
+      techs: same
+        ? ["o-uchi-gari","de-ashi-harai","ko-uchi-gari"].map(id=>techniques.find(t=>t.id===id)).filter(Boolean)
+        : ["o-soto-gari","tai-otoshi","seoi-nage"].map(id=>techniques.find(t=>t.id===id)).filter(Boolean),
+    });
+  }
+
+  // Standard teknik-taktik
+  if(standardTechs.length>0) {
+    const ashiTechs = standardTechs.filter(t=>t.cat==="ashi-waza");
+    const teTechs   = standardTechs.filter(t=>t.cat==="te-waza");
+    const koshiTechs= standardTechs.filter(t=>t.cat==="koshi-waza");
+    const pts = [];
+    if(ashiTechs.length>0) pts.push(`Starta med ${ashiTechs.map(t=>t.sv).join(" / ")} för att bryta balans`);
+    if(ashiTechs.length>0) pts.push("Ashi-waza tvingar uke att förflytta — följ upp med Te-waza eller Koshi-waza");
+    if(teTechs.length>0||koshiTechs.length>0) pts.push(`Avsluta med ${[...teTechs,...koshiTechs].map(t=>t.sv).join(" / ")}`);
+    if(selectedComboTech) pts.push(`Planerad kombination: ${standardTechs[0]?.sv} → ${selectedComboTech.sv}`);
+    strategy.push({
+      title: "Teknik-sekvens",
+      icon: "⚡",
+      color: "#2c7a4a",
+      bg: "#e2f5e8",
+      bdr: "#2c7a4a",
+      points: pts.length>0 ? pts : ["Välj standard tekniker för att se sekvens-taktik"],
+      techs: [...standardTechs, selectedComboTech].filter(Boolean),
+    });
+  }
+
+  // Mot motståndarens tekniker
+  if(oppTechs.length>0) {
+    const counters = [];
+    oppTechs.forEach(ot=>{
+      combos.filter(c=>c.from===ot.id).forEach(c=>{
+        const to=techniques.find(t=>t.id===c.to);
+        if(to&&!counters.find(x=>x.id===to.id)) counters.push(to);
+      });
+    });
+    strategy.push({
+      title: "Försvar mot motståndaren",
+      icon: "🛡",
+      color: "#c0392b",
+      bg: "#fde8e6",
+      bdr: "#c0392b",
+      points: [
+        `Motståndaren använder: ${oppTechs.map(t=>t.sv).join(", ")}`,
+        counters.length>0 ? `Var beredd på följdattacker: ${counters.slice(0,3).map(t=>t.sv).join(", ")}` : "Studera motståndarens kombinationer",
+        "Håll låg tyngdpunkt och kontrollera avstånd",
+      ],
+      techs: [],
+    });
+  }
+
+  // Allmän taktik om lite data
+  if(!hasData) {
+    strategy.push({
+      title: "Fyll i dina val",
+      icon: "📋",
+      color: mid,
+      bg: paper,
+      bdr: border,
+      points: [
+        "Gå till Teknik-fliken och välj stans, kumikata och standardtekniker",
+        "Gå till Motståndare-fliken och välj motståndarens profil",
+        "Återkom hit för personlig strategi och taktik",
+      ],
+      techs: [],
+    });
+  }
+
+  return (
+    <div style={{display:"flex",flexDirection:"column",gap:10}}>
+      {strategy.map((s,i)=>(
+        <div key={i} style={{borderRadius:8,border:`1.5px solid ${s.bdr}`,background:s.bg,padding:"0.9rem 1rem",overflow:"hidden"}}>
+          <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:8}}>
+            <span style={{fontSize:"1.1rem"}}>{s.icon}</span>
+            <div style={{fontSize:"0.62rem",textTransform:"uppercase",letterSpacing:"0.1em",color:s.color,fontWeight:700,flex:1}}>{s.title}</div>
+          </div>
+          <ul style={{marginLeft:14,marginBottom:s.techs.length>0?8:0}}>
+            {s.points.map((p,j)=>(
+              <li key={j} style={{fontSize:"0.72rem",lineHeight:1.7,color:ink,listStyle:"disc",marginBottom:2}}>{p}</li>
+            ))}
+          </ul>
+          {s.techs.length>0 && (
+            <div style={{display:"flex",flexWrap:"wrap",gap:5,paddingTop:6,borderTop:`1px solid ${s.bdr}40`}}>
+              {s.techs.map(t=>{
+                const cc=CAT_COLOR[t.cat];
+                return (
+                  <span key={t.id} onClick={()=>{setSelectedId(t.id);setMainTab("kombdb");}}
+                    style={{fontSize:"0.65rem",fontWeight:700,background:paper,color:cc.dot,padding:"3px 8px",borderRadius:4,cursor:"pointer",border:`1px solid ${cc.dot}40`}}>
+                    {t.sv}
+                  </span>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+</script>
+</body>
+</html>
