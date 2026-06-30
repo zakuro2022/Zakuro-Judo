@@ -1698,7 +1698,7 @@ function App() {
       alignItems: "center",
       borderTop: "1px solid #f0e8e4"
     }
-  },  [["kub", t("Kubvy",lang)], ["strategi", t("Strategi",lang)], ["koncept", t("Kampkoncept",lang)]].map(function (_ref2) {
+  },  [["strategi", t("Strategi",lang)], ["koncept", t("Kampkoncept",lang)]].map(function (_ref2) {
     var _ref3 = _slicedToArray(_ref2, 2),
       id = _ref3[0],
       label = _ref3[1];
@@ -1721,7 +1721,26 @@ function App() {
         fontSize: 7
       }
     }, "\uD83D\uDD12"));
-  }), /*#__PURE__*/React.createElement("button", {
+  }), /*#__PURE__*/React.createElement("a", {
+    href: "shiai.html",
+    target: "_blank",
+    rel: "noopener noreferrer",
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "5px 10px",
+      borderRadius: 6,
+      cursor: "pointer",
+      background: "#c0392b",
+      border: "1px solid #c0392b",
+      color: "#fff",
+      fontWeight: 700,
+      textDecoration: "none",
+      display: "inline-flex",
+      alignItems: "center",
+      gap: 4
+    }
+  }, "\u2192 ", t("JudoTech Shiai", lang)), /*#__PURE__*/React.createElement("button", {
     onClick: function onClick() {
       return setDel1Locked(function (p) {
         return !p;
