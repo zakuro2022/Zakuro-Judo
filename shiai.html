@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html lang="sv"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>JudoTech Judoka</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><circle cx='5' cy='5' r='5' fill='%23c0392b'/></svg>">
+<title>JudoTech Shiai</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 10'><circle cx='5' cy='5' r='5' fill='%236a2c8a'/></svg>">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
 <style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:'DM Sans',sans-serif;background:#f5f0e8;color:#1a1410}textarea,select,input{font-family:'DM Sans',sans-serif}</style>
 </head><body><div id="root"></div>
 <script>
-
 
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
@@ -964,13 +963,7 @@ var EMPTY_PLAYER = function EMPTY_PLAYER() {
     tori: "",
     uke: "",
     standardTechIds: [],
-    neWazaTechIds: [],
-    specialTechId: null,
-    specialStance: "",
     selectedCombos: {},
-    prefOpponent: "",
-    greppStyle: "",
-    distans: "",
     layers: EMPTY_LAYERS.map(function (l) {
       return _objectSpread(_objectSpread({}, l), {}, {
         pts: [""]
@@ -1213,11 +1206,13 @@ function KombPanel(_ref) {
       })
     ) : null,
     // Inga kombinationer
-    null
+    outCombos.length === 0
+      ? e("div", {style:{color:mid,fontSize:"0.65rem",textAlign:"center",
+          padding:"20px 0",fontStyle:"italic"}}, "Inga kombinationer registrerade.")
+      : null
   );
 }
-
-var TRANSLATIONS = {"Höger vs Höger":"Right vs Right","Höger vs Vänster":"Right vs Left","Scenario: ":"Scenario: ","Höger":"Right","Vänster":"Left"," vs ":" vs ","Varje nivå är en situation i kampen, från idealläge till maximalt farligt. Använd förslagen eller skriv egna.":"Each level is a situation in the match, from ideal position to maximum danger. Use the suggestions or write your own.","Nivå":"Level","Punkter (en per rad)…":"Points (one per line)…","Idealläge":"Ideal position","Nackgrepp":"Neck grip","Armhålsgrepp":"Armpit grip","Neutralt 2-2":"Neutral 2-2","Korsgrepp":"Cross grip","Närkampsläge":"Close combat","Maximalt farligt":"Maximum danger","Ärm-lapelgrepp":"Sleeve-lapel grip","God kontroll":"Good control","Axelkontroll":"Shoulder control","Ingen klar fördel":"No clear advantage","Oortodox läge":"Unorthodox position","Farligt":"Dangerous","Kontroll förlorad":"Control lost","Axelkontroll med ärm- och lapelgrepp":"Shoulder control with sleeve and lapel grip","Frigör armar för effektiv kuzushi":"Frees arms for effective kuzushi","Distanshantering för acceleration":"Distance management for acceleration","Kontrollerar motståndarens axlar":"Controls the opponent's shoulders","Nackgrepp provocerar motst. att böja höfter":"Neck grip provokes the opponent to bend their hips","Axel- och överkroppskontroll":"Shoulder and upper body control","Distanshantering med armhålsgrepp":"Distance management with armpit grip","Extremt 2-2-läge — höger mot höger":"Extreme 2-2 situation — right against right","Risk för motangrepp vid eget anfall":"Risk of counter-attack on your own attack","Korsgrepp leder till oortodox situation":"Cross grip leads to an unorthodox situation","Egna handlingsalternativ kraftigt begränsade":"Your own options are heavily limited","Ingen distans — motst. låser med o-goshi-grepp":"No distance — opponent locks with o-goshi grip","Begränsad variation ökar kontrashot":"Limited variation increases counter risk","Nack-/rygggrepp — tvingad höftflexion":"Neck/back grip — forced hip flexion","Förlorar fullständig kontroll":"Complete loss of control","Använd förslag":"Use suggestion","Mot: ":"Against: ","Klassiskt höger-höger — kämpa om inre tsurite-position":"Classic right-right — fight for inside tsurite position","O-uchi-gari och seoi-nage fungerar bra från right vs right":"O-uchi-gari and seoi-nage work well from right vs right","Håll motståndaren i rörelse med ko-uchi och de-ashi":"Keep the opponent moving with ko-uchi and de-ashi","Timing: kasta när motståndaren tar steg in":"Timing: throw when the opponent steps in","Spegelsituation — motståndaren har öppen höger sida mot dig":"Mirror situation — the opponent has an open right side against you","O-soto-gari och ko-uchi-gari direkt till motståndarens öppna sida":"O-soto-gari and ko-uchi-gari direct to the opponent's open side","Var försiktig med motståndarens seoi-nage och tai-otoshi":"Be careful of the opponent's seoi-nage and tai-otoshi","Kontrollera korsgreppet tidigt — det är svårare i HV-läge":"Control the cross grip early — it's harder in a right-left situation","Motståndarens tsurite är hög — undvik seoi uppifrån":"The opponent's tsurite is high — avoid seoi from above","Använd tai-otoshi eller o-soto-gari":"Use tai-otoshi or o-soto-gari","Håll distans och kontra vid framtrycket":"Keep distance and counter on the forward push","Farlig kastposition — håll höfterna bakåt":"Dangerous throwing position — keep your hips back","Kontra med o-uchi-gari i rörelse":"Counter with o-uchi-gari in movement","Bryt med nedwåtrörelse":"Break with a downward movement","Kontrollgrepp — rör dig i cirklar":"Control grip — move in circles","Ko-soto och de-ashi i sidled":"Ko-soto and de-ashi sideways","Vänta på öppning vid greppbyte":"Wait for an opening at grip change","Korsgrepp ger inre fördel":"Cross grip gives an inside advantage","Håll din tsurite hög":"Keep your tsurite high","O-uchi och tai-otoshi fungerar väl":"O-uchi and tai-otoshi work well","Standard höger kumi — använd din favoritgrepp":"Standard right kumi — use your favorite grip","Kämpa om tsurite-kontrollen":"Fight for tsurite control","Ashi-waza för att öppna upp":"Ashi-waza to open up","Läs motståndarens greppförsök":"Read the opponent's grip attempts","Anpassa tsurite efter greppen":"Adapt your tsurite to the grip","Bryt grepp direkt och gå in":"Break the grip immediately and move in","▼ Kortare motståndare — din räckvidd är längre. Använd ashi-waza och ha-barai från öppen position.":"▼ Shorter opponent — your reach is longer. Use ashi-waza and ha-barai from an open position.","▲ Längre motståndare — gå in på nära håll. Ko-soto, o-uchi och koshi-waza får dubbel effekt.":"▲ Taller opponent — close the distance. Ko-soto, o-uchi and koshi-waza get double effect.","▬ Liknande längd — teknikval avgörs av grepp, timing och footwork.":"▬ Similar height — technique choice is decided by grip, timing and footwork.","Strategier från kända coacher läggs till här. När du skapar databasen kopplas rätt tips in baserat på scenario och greppning.":"Strategies from well-known coaches will be added here. Once you build the database, the right tips will be linked automatically based on scenario and grip.","Höger kumi (krage + ärm)":"Right kumi (collar + sleeve)","Vänster kumi (krage + ärm)":"Left kumi (collar + sleeve)","Nackgrepp höger":"Neck grip right","Nackgrepp vänster":"Neck grip left","Armhålsgrepp höger":"Armpit grip right","Armhålsgrepp vänster":"Armpit grip left","Dubbelärm (2-2)":"Double sleeve (2-2)","Korsgrepp":"Cross grip","Bältesgrepp":"Belt grip","Nackgrepp":"Neck grip","Armhålsgrepp":"Armpit grip","Defensivt — böjer framåt":"Defensive — bends forward","► Höger stans":"► Right stance","◄ Vänster stans":"◄ Left stance"," — annorlunda mot din vanliga ":" — different from your usual ","\u25ba H\u00f6ger":"\u25ba Right","\u25c4 V\u00e4nster":"\u25c4 Left","Stående":"Standing","Specialteknik":"Special technique","\u21BA Rensa":"\u21BA Clear","Spelarinställningar":"Player settings","Stans":"Stance","Favoritgrepp — Kumikata":"Favorite grip — Kumikata","— Välj grepp —":"— Select grip —","Aktiv profil:":"Active profile:","+ Välj i listan":"+ Select from list","Välj upp till 4 tekniker":"Select up to 4 techniques","Sök…":"Search…","Alla":"All","Rensa":"Clear","Förslag på strategi":"Strategy suggestions","Dina tekniker i detta läge":"Your techniques in this situation","+ Coach-databas kommer":"+ Coach database coming","Min spelstrategi mot motstandaren":"My game strategy against the opponent","Motståndare:":"Opponent:","Stand":"Stance","Kortare":"Shorter","Langre":"Taller","Liknande":"Similar","Forslag":"Suggestions","Förnamn…":"First name…","Efternamn…":"Last name…","Land…":"Country…","Teknik":"Technique","Kampkoncept":"Match Concept","Situationer":"Situations","Kubvy":"Cube View","Strategi":"Strategy","Lottning":"Draw","Motståndare":"Opponent","Tori vs Uke":"Tori vs Uke","Förnamn":"First name","Efternamn":"Last name","Land":"Country","Viktklass":"Weight class","Längd (cm)":"Height (cm)","Spara till Coach":"Save to Coach","Skriv ut PDF":"Print PDF","Judoka":"Judoka","Uppdatera":"Refresh","Min spelstrategi mot motståndaren":"My game strategy against the opponent","Stand":"Stance","Mitt stand:":"My stance:","Föredrar att möta":"Prefers to meet","Höger":"Right","Vänster":"Left","Båda":"Both","Motståndarens längd":"Opponent's height","Kortare":"Shorter","Längre":"Taller","Liknande":"Similar","Motståndarens greppning":"Opponent's grip","Offensiv":"Offensive","Defensiv":"Defensive","Kontroll":"Control","Forslag":"Suggestions","Förslag på strategi":"Strategy suggestions","Coach-databas":"Coach database","Dina tekniker":"Your techniques","Dina tekniker i detta läge":"Your techniques in this situation","Från din kampkub":"From your match cube","Längdfördel":"Height advantage","Kampkub":"Match Cube","Använd förslag":"Use suggestion","Namn på situation…":"Situation name…","Punkter (en per rad)…":"Points (one per line)…","JudoTech Judoka":"JudoTech Athlete","JudoTech Coach":"JudoTech Coach","JudoTech Shiai":"JudoTech Match","Inga kombinationer registrerade.":"No combinations registered.","Välj en teknik":"Select a technique","Direkta kombinationer":"Direct combinations","Motrörelse":"Counter movement","Varifrån":"Coming from","Stånd":"Stance","Greppstil":"Grip style","Distans":"Distance","Kort":"Short","Lång":"Long","Varierad":"Varied"};
+var TRANSLATIONS = {"Höger kumi (krage + ärm)":"Right kumi (collar + sleeve)","Vänster kumi (krage + ärm)":"Left kumi (collar + sleeve)","Nackgrepp höger":"Neck grip right","Nackgrepp vänster":"Neck grip left","Armhålsgrepp höger":"Armpit grip right","Armhålsgrepp vänster":"Armpit grip left","Dubbelärm (2-2)":"Double sleeve (2-2)","Korsgrepp":"Cross grip","Bältesgrepp":"Belt grip","Nackgrepp":"Neck grip","Armhålsgrepp":"Armpit grip","Klistra in lottningen i JSON-format nedan. Exempel:":"Paste the draw in JSON format below. Example:","Klistra in JSON-lottning här…":"Paste JSON draw here…","Lottning":"Draw","Båda":"Both","Offensiv":"Offensive","Defensiv":"Defensive","Kontroll":"Control","Distans":"Distance","Kort":"Short","Lång":"Long","Varierad":"Varied","Din profil mot motståndaren":"Your profile against the opponent","Fylld = startteknik · Genomskinlig = kombination · ⭐ = specialteknik":"Filled = starting technique · Transparent = combination · ⭐ = special technique","Motståndares startteknik":"Opponent's starting technique","Motståndarens stans & grepp":"Opponent's stance & grip","Din stans & Kumikata":"My stance & Kumikata","Ej valt":"Not selected","★ Mottekniker mot ":"★ Counter techniques against ","\uD83D\uDCBE Spara":"\uD83D\uDCBE Save","Förslag på strategi":"Strategy suggestions","Dina tekniker i detta läge":"Your techniques in this situation","+ Coach-databas kommer":"+ Coach database coming","Min spelstrategi mot motstandaren":"My game strategy against the opponent","Motståndare:":"Opponent:","Stand":"Stance","Kortare":"Shorter","Langre":"Taller","Liknande":"Similar","Forslag":"Suggestions","Förnamn…":"First name…","Efternamn…":"Last name…","Land…":"Country…","Teknik":"Technique","Kampkoncept":"Match Concept","Situationer":"Situations","Kubvy":"Cube View","Strategi":"Strategy","Lottning":"Draw","Motståndare":"Opponent","Tori vs Uke":"Tori vs Uke","Förnamn":"First name","Efternamn":"Last name","Land":"Country","Viktklass":"Weight class","Längd (cm)":"Height (cm)","Spara till Coach":"Save to Coach","Skriv ut PDF":"Print PDF","Judoka":"Judoka","Uppdatera":"Refresh","Min spelstrategi mot motståndaren":"My game strategy against the opponent","Stand":"Stance","Mitt stand:":"My stance:","Föredrar att möta":"Prefers to meet","Höger":"Right","Vänster":"Left","Båda":"Both","Motståndarens längd":"Opponent's height","Kortare":"Shorter","Längre":"Taller","Liknande":"Similar","Motståndarens greppning":"Opponent's grip","Offensiv":"Offensive","Defensiv":"Defensive","Kontroll":"Control","Forslag":"Suggestions","Förslag på strategi":"Strategy suggestions","Coach-databas":"Coach database","Dina tekniker":"Your techniques","Dina tekniker i detta läge":"Your techniques in this situation","Från din kampkub":"From your match cube","Längdfördel":"Height advantage","Kampkub":"Match Cube","Använd förslag":"Use suggestion","Namn på situation…":"Situation name…","Punkter (en per rad)…":"Points (one per line)…","JudoTech Judoka":"JudoTech Athlete","JudoTech Coach":"JudoTech Coach","JudoTech Shiai":"JudoTech Match","Inga kombinationer registrerade.":"No combinations registered.","Välj en teknik":"Select a technique","Direkta kombinationer":"Direct combinations","Motrörelse":"Counter movement","Varifrån":"Coming from","Stånd":"Stance","Greppstil":"Grip style","Distans":"Distance","Kort":"Short","Lång":"Long","Varierad":"Varied"};
 function t(sv, lang) { return lang === "en" ? (TRANSLATIONS[sv] || sv) : sv; }
 
 function App() {
@@ -1225,7 +1220,7 @@ function App() {
   var _useState_lang = useState("sv"),
     lang = _useState_lang[0],
     setLang = _useState_lang[1];
-  var _useState = useState("kombdb"),
+  var _useState = useState("lottning"),
     _useState2 = _slicedToArray(_useState, 2),
     mainTab = _useState2[0],
     setMainTab = _useState2[1];
@@ -1263,10 +1258,6 @@ function App() {
     _useState16 = _slicedToArray(_useState15, 2),
     players = _useState16[0],
     setPlayers = _useState16[1];
-  // Auto-load players from localStorage on mount
-  React.useEffect(function() {
-    try { var saved=localStorage.getItem('zakuro_players');if(saved)setPlayers(JSON.parse(saved)); } catch(e) {}
-  }, []);
   var _useState17 = useState(0),
     _useState18 = _slicedToArray(_useState17, 2),
     activePlayerIdx = _useState18[0],
@@ -1360,15 +1351,6 @@ function App() {
     _useState36 = _slicedToArray(_useState35, 2),
     matchNotes = _useState36[0],
     setMatchNotes = _useState36[1];
-  var _useState_ksc = useState("HH"),
-    kpScenario = _useState_ksc[0],
-    setKpScenario = _useState_ksc[1];
-  var _useState_kol = useState(""),
-    kpOppLen = _useState_kol[0],
-    setKpOppLen = _useState_kol[1];
-  var _useState_kog = useState(""),
-    kpOppGr = _useState_kog[0],
-    setKpOppGr = _useState_kog[1];
   var _useState37 = useState({
       my: 0,
       opp: 0,
@@ -1646,8 +1628,8 @@ function App() {
     }
   }, /*#__PURE__*/React.createElement("div", {
     style: {
-      background: "#fff8f5",
-      borderBottom: "2px solid #c0392b",
+      background: "#f5f8ff",
+      borderBottom: "2px solid #2c5f8a",
       boxShadow: "0 1px 6px rgba(192,57,43,0.08)"
     }
   }, /*#__PURE__*/React.createElement("div", {
@@ -1678,7 +1660,7 @@ function App() {
       color: "#2c5f8a",
       fontWeight: 700
     }
-  }, "JudoTech Judoka"), /*#__PURE__*/React.createElement("div", {
+  }, "JudoTech Shiai"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: "3px"
@@ -1694,7 +1676,173 @@ function App() {
         display: "inline-block"
       }
     });
-  }), /*#__PURE__*/React.createElement("button",{onClick:function(){setLang(lang==="sv"?"en":"sv");},style:{marginLeft:"auto",fontFamily:"'DM Sans',sans-serif",fontSize:"0.6rem",fontWeight:700,padding:"4px 10px",borderRadius:5,cursor:"pointer",background:"transparent",border:"1.5px solid #c0392b",color:"#c0392b"}},lang==="sv"?"EN":"SV")))), /*#__PURE__*/React.createElement("div",{style:{padding:"0.3rem 0.8rem 0.3rem",display:"flex",gap:6,alignItems:"flex-end",borderTop:"1px solid #f0e8e4",flexWrap:"wrap"}}, /*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.45rem",textTransform:"uppercase",color:"#8a7a6a",marginBottom:2}},t("Förnamn",lang)),/*#__PURE__*/React.createElement("input",{value:players[activePlayerIdx].firstName||"",onChange:function(ev){var v=ev.target.value;setPlayers(function(p){return p.map(function(pl,i){return i===activePlayerIdx?_objectSpread(_objectSpread({},pl),{},{firstName:v}):pl;});});},placeholder:t("Förnamn…",lang),style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.7rem",padding:"3px 6px",borderRadius:4,border:"1px solid #e0d8cc",background:"#faf8f3",color:"#1a1410",width:90,outline:"none"}})),/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.45rem",textTransform:"uppercase",color:"#8a7a6a",marginBottom:2}},t("Efternamn",lang)),/*#__PURE__*/React.createElement("input",{value:players[activePlayerIdx].lastName||"",onChange:function(ev){var v=ev.target.value;setPlayers(function(p){return p.map(function(pl,i){return i===activePlayerIdx?_objectSpread(_objectSpread({},pl),{},{lastName:v}):pl;});});},placeholder:t("Efternamn…",lang),style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.7rem",padding:"3px 6px",borderRadius:4,border:"1px solid #e0d8cc",background:"#faf8f3",color:"#1a1410",width:90,outline:"none"}})),/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.45rem",textTransform:"uppercase",color:"#8a7a6a",marginBottom:2}},t("Land",lang)),/*#__PURE__*/React.createElement("input",{value:players[activePlayerIdx].country||"",onChange:function(ev){var v=ev.target.value;setPlayers(function(p){return p.map(function(pl,i){return i===activePlayerIdx?_objectSpread(_objectSpread({},pl),{},{country:v}):pl;});});},placeholder:t("Land…",lang),style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.7rem",padding:"3px 6px",borderRadius:4,border:"1px solid #e0d8cc",background:"#faf8f3",color:"#1a1410",width:55,outline:"none"}})),/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.45rem",textTransform:"uppercase",color:"#8a7a6a",marginBottom:2}},t("Viktklass",lang)),/*#__PURE__*/React.createElement("select",{value:players[activePlayerIdx].weightClass||"",onChange:function(ev){var v=ev.target.value;setPlayers(function(p){return p.map(function(pl,i){return i===activePlayerIdx?_objectSpread(_objectSpread({},pl),{},{weightClass:v}):pl;});});},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.7rem",padding:"3px 5px",borderRadius:4,border:"1px solid #e0d8cc",background:"#faf8f3",color:"#1a1410",outline:"none",cursor:"pointer"}},/*#__PURE__*/React.createElement("option",{value:""}, "— kg —"),["-60","-66","-73","-81","-90","-100","+100","-48","-52","-57","-63","-70","-78","+78"].map(function(w){return /*#__PURE__*/React.createElement("option",{key:w,value:w},w+" kg");}))),/*#__PURE__*/React.createElement("button",{onClick:function(){try{localStorage.setItem('zakuro_players',JSON.stringify(players));}catch(e){}window.open('coach.html','_blank');},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.6rem",padding:"5px 10px",borderRadius:4,cursor:"pointer",background:"#3B7A18",border:"1px solid #3B7A18",color:"#fff",fontWeight:700,alignSelf:"flex-end",whiteSpace:"nowrap"}},t("Spara till Coach",lang)),/*#__PURE__*/React.createElement("button",{onClick:function(){window.print();},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.6rem",padding:"5px 10px",borderRadius:4,cursor:"pointer",background:"#2c5f8a",border:"1px solid #2c5f8a",color:"#fff",fontWeight:700,alignSelf:"flex-end",whiteSpace:"nowrap"}},t("Skriv ut PDF",lang))), React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("button",{onClick:function(){setLang(lang==="sv"?"en":"sv");},style:{marginLeft:"auto",fontFamily:"'DM Sans',sans-serif",fontSize:"0.6rem",fontWeight:700,padding:"4px 10px",borderRadius:5,cursor:"pointer",background:"transparent",border:"1.5px solid #6a2c8a",color:"#6a2c8a"}},lang==="sv"?"EN":"SV")))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      padding: "0.4rem 0.8rem 0.3rem",
+      display: "flex",
+      gap: 6,
+      alignItems: "flex-end",
+      borderTop: "1px solid #f0e8e4",
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.45rem",
+      textTransform: "uppercase",
+      color: "#8a7a6a",
+      marginBottom: 2
+    }
+  }, t("Förnamn",lang)), /*#__PURE__*/React.createElement("input", {
+    value: players[activePlayerIdx].firstName || "",
+    onChange: function onChange(e) {
+      return setPlayers(function (prev) {
+        return prev.map(function (p, i) {
+          return i === activePlayerIdx ? _objectSpread(_objectSpread({}, p), {}, {
+            firstName: e.target.value,
+            name: (e.target.value + " " + (p.lastName || "")).trim()
+          }) : p;
+        });
+      });
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "3px 6px",
+      borderRadius: 4,
+      border: "1px solid #e0d8cc",
+      background: "#faf8f3",
+      color: "#1a1410",
+      width: 80,
+      outline: "none"
+    },
+    placeholder: t("Förnamn…",lang)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.45rem",
+      textTransform: "uppercase",
+      color: "#8a7a6a",
+      marginBottom: 2
+    }
+  }, t("Efternamn",lang)), /*#__PURE__*/React.createElement("input", {
+    value: players[activePlayerIdx].lastName || "",
+    onChange: function onChange(e) {
+      return setPlayers(function (prev) {
+        return prev.map(function (p, i) {
+          return i === activePlayerIdx ? _objectSpread(_objectSpread({}, p), {}, {
+            lastName: e.target.value,
+            name: ((p.firstName || "") + " " + e.target.value).trim()
+          }) : p;
+        });
+      });
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "3px 6px",
+      borderRadius: 4,
+      border: "1px solid #e0d8cc",
+      background: "#faf8f3",
+      color: "#1a1410",
+      width: 80,
+      outline: "none"
+    },
+    placeholder: t("Efternamn…",lang)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.45rem",
+      textTransform: "uppercase",
+      color: "#8a7a6a",
+      marginBottom: 2
+    }
+  }, t("Land",lang)), /*#__PURE__*/React.createElement("input", {
+    value: players[activePlayerIdx].country || "",
+    onChange: function onChange(e) {
+      return setPlayers(function (prev) {
+        return prev.map(function (p, i) {
+          return i === activePlayerIdx ? _objectSpread(_objectSpread({}, p), {}, {
+            country: e.target.value
+          }) : p;
+        });
+      });
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "3px 6px",
+      borderRadius: 4,
+      border: "1px solid #e0d8cc",
+      background: "#faf8f3",
+      color: "#1a1410",
+      width: 45,
+      outline: "none"
+    },
+    placeholder: t("Land…",lang)
+  })), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.45rem",
+      textTransform: "uppercase",
+      color: "#8a7a6a",
+      marginBottom: 2
+    }
+  }, t("Viktklass",lang)), /*#__PURE__*/React.createElement("select", {
+    value: players[activePlayerIdx].weightClass || "",
+    onChange: function onChange(e) {
+      return setPlayers(function (prev) {
+        return prev.map(function (p, i) {
+          return i === activePlayerIdx ? _objectSpread(_objectSpread({}, p), {}, {
+            weightClass: e.target.value
+          }) : p;
+        });
+      });
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "3px 5px",
+      borderRadius: 4,
+      border: "1px solid #e0d8cc",
+      background: "#faf8f3",
+      color: "#1a1410",
+      outline: "none",
+      cursor: "pointer"
+    }
+  }, /*#__PURE__*/React.createElement("option", {
+    value: ""
+  }, "\u2014 kg \u2014"), ["-60", "-66", "-73", "-81", "-90", "-100", "+100", "-48", "-52", "-57", "-63", "-70", "-78", "+78"].map(function (w) {
+    return /*#__PURE__*/React.createElement("option", {
+      key: w,
+      value: w
+    }, w, " kg");
+  })), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      try {
+        localStorage.setItem('zakuro_players', JSON.stringify(players));
+      } catch (e) {}
+      alert("✓ Sparat till coachen!");
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.6rem",
+      padding: "5px 10px",
+      borderRadius: 4,
+      cursor: "pointer",
+      background: "#3B7A18",
+      border: "1px solid #3B7A18",
+      color: "#fff",
+      fontWeight: 700,
+      alignSelf: "flex-end"
+    }
+  }, t("\uD83D\uDCBE Spara",lang)))), /*#__PURE__*/React.createElement("div", {
+    style: {padding:"0.2rem 0.8rem 0.3rem",display:"flex",gap:8,alignItems:"center",borderTop:"1px solid #f5ede8"}
+  }, React.createElement("span", {
+    style:{fontSize:"0.5rem",textTransform:"uppercase",color:"#8a7a6a",fontWeight:600,flexShrink:0}
+  }, t("Längd (cm)",lang)), React.createElement("input", {
+    type:"number",
+    value: players[activePlayerIdx].height||"",
+    onChange: function(e){var v=e.target.value;setPlayers(function(p){return p.map(function(pl,i){return i===activePlayerIdx?_objectSpread(_objectSpread({},pl),{},{height:v}):pl;});});},
+    placeholder:"cm",
+    style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.7rem",padding:"3px 6px",borderRadius:4,border:"1px solid #e0d8cc",background:"#faf8f3",color:"#1a1410",width:60,outline:"none"}
+  })), React.createElement("div", {
     style: {
       padding: "0.3rem 0.8rem 0.4rem",
       display: "flex",
@@ -1703,14 +1851,14 @@ function App() {
       alignItems: "center",
       borderTop: "1px solid #f0e8e4"
     }
-  },  [["kombdb", t("Teknik",lang)], ["koncept", t("Kampkoncept",lang)]].map(function (_ref2) {
+  },  [["lottning", t("Lottning",lang)], ["motstand", t("Motst\u00e5ndare",lang)], ["foruts", t("Tori vs Uke",lang)]].map(function (_ref2) {
     var _ref3 = _slicedToArray(_ref2, 2),
       id = _ref3[0],
       label = _ref3[1];
     return /*#__PURE__*/React.createElement("button", {
       key: id,
       onClick: function onClick() {
-        if(id==="kub"){setMainTab("koncept");setKoncTab("kub");}else setMainTab(id);
+        setMainTab(id);
       },
       style: _objectSpread(_objectSpread({}, navBtn(id)), {}, {
         position: "relative",
@@ -1845,7 +1993,7 @@ function App() {
       fontWeight: 700,
       marginBottom: 8
     }
-  }, t("Spelarinställningar",lang)), /*#__PURE__*/React.createElement("div", {
+  }, "Spelarinst\xE4llningar"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 16,
@@ -1859,7 +2007,7 @@ function App() {
       color: mid,
       marginBottom: 4
     }
-  }, t("Stans",lang)), /*#__PURE__*/React.createElement("div", {
+  }, "Stans"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 6
@@ -1882,7 +2030,7 @@ function App() {
         border: "1.5px solid ".concat(stance === s.toLowerCase() ? ink : border),
         transition: "all 0.12s"
       }
-    }, s === "Höger" ? t("► Höger",lang) : t("◄ Vänster",lang));
+    }, s === "Höger" ? "► Höger" : "◄ Vänster");
   }))), /*#__PURE__*/React.createElement("div", {
     style: {
       flex: 1,
@@ -1895,7 +2043,7 @@ function App() {
       color: mid,
       marginBottom: 4
     }
-  }, t("Favoritgrepp — Kumikata",lang)), /*#__PURE__*/React.createElement("select", {
+  }, "Favoritgrepp \u2014 Kumikata"), /*#__PURE__*/React.createElement("select", {
     value: favGrepp,
     onChange: function onChange(e) {
       return setFavGrepp(e.target.value);
@@ -1907,7 +2055,7 @@ function App() {
     })
   }, /*#__PURE__*/React.createElement("option", {
     value: ""
-  }, t("— Välj grepp —",lang)), GREPP_OPTIONS.map(function (g) {
+  }, "\u2014 V\xE4lj grepp \u2014"), GREPP_OPTIONS.map(function (g) {
     return /*#__PURE__*/React.createElement("option", {
       key: g,
       value: g
@@ -1921,7 +2069,7 @@ function App() {
       fontSize: "0.55rem",
       padding: "5px 10px"
     })
-  }, t("\u21BA Rensa",lang))), (stance || favGrepp) && /*#__PURE__*/React.createElement("div", {
+  }, "\u21BA Rensa")), (stance || favGrepp) && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 8,
       paddingTop: 8,
@@ -1936,7 +2084,7 @@ function App() {
       fontSize: "0.52rem",
       color: mid
     }
-  }, t("Aktiv profil:",lang)), stance && /*#__PURE__*/React.createElement("span", {
+  }, "Aktiv profil:"), stance && /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: "0.68rem",
       fontWeight: 700,
@@ -1945,7 +2093,7 @@ function App() {
       padding: "2px 8px",
       borderRadius: 4
     }
-  }, stance === "höger" ? t("► Höger",lang) : t("◄ Vänster",lang)), favGrepp && /*#__PURE__*/React.createElement("span", {
+  }, stance === "höger" ? "► Höger" : "◄ Vänster"), favGrepp && /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: "0.68rem",
       fontWeight: 700,
@@ -2048,7 +2196,7 @@ function App() {
           fontStyle: isActive ? "normal" : "italic",
           fontWeight: isActive ? 700 : 400
         }
-      }, isActive ? t("👇 Välj kombination nedan",lang) : t("Ingen kombination",lang)));
+      }, isActive ? "👇 Välj kombination nedan" : "Ingen kombination"));
     };
     return /*#__PURE__*/React.createElement("div", {
       style: {
@@ -2063,7 +2211,7 @@ function App() {
         overflow: "hidden",
         border: "1px solid ".concat(border)
       }
-    }, [["standing", "🥋 " + t("Stående",lang) + " (" + standardTechs.length + "/4)", "#c0392b"], ["ne-waza", "🤼 Ne-waza (" + neWazaTechs.length + "/4)", "#2c6a8a"], ["special", "⭐ " + t("Specialteknik",lang) + "", "#b8860b"]].map(function (_ref5) {
+    }, [["standing", "🥋 Stående (" + standardTechs.length + "/4)", "#c0392b"], ["ne-waza", "🤼 Ne-waza (" + neWazaTechs.length + "/4)", "#2c6a8a"], ["special", "⭐ Specialteknik", "#b8860b"]].map(function (_ref5) {
       var _ref6 = _slicedToArray(_ref5, 3),
         m = _ref6[0],
         label = _ref6[1],
@@ -2129,7 +2277,7 @@ function App() {
         color: "#c0392b60",
         fontSize: "0.65rem"
       }
-    }, t("+ Välj i listan",lang))), techMode === "ne-waza" && /*#__PURE__*/React.createElement("div", {
+    }, "+ V\xE4lj i listan")), techMode === "ne-waza" && /*#__PURE__*/React.createElement("div", {
       style: {
         display: "grid",
         gridTemplateColumns: "repeat(auto-fit,minmax(150px,1fr))",
@@ -2197,7 +2345,7 @@ function App() {
           border: "1.5px solid #b8860b",
           transition: "all 0.12s"
         }
-      }, s === "Höger" ? t("► Höger",lang) : t("◄ Vänster",lang));
+      }, s === "Höger" ? "► Höger" : "◄ Vänster");
     })), specialTech ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(TechCard, {
       tech: specialTech,
       idx: 0,
@@ -2224,7 +2372,7 @@ function App() {
         color: "#b8860b",
         fontWeight: 600
       }
-    }, specialStance === "höger" ? t("► Höger stans",lang) : t("◄ Vänster stans",lang), " \u2014 annorlunda mot din vanliga ", stance || "stans")) : /*#__PURE__*/React.createElement("div", {
+    }, specialStance === "höger" ? "► Höger stans" : "◄ Vänster stans", " \u2014 annorlunda mot din vanliga ", stance || "stans")) : /*#__PURE__*/React.createElement("div", {
       style: {
         border: "2px dashed #b8860b60",
         borderRadius: 8,
@@ -2247,7 +2395,7 @@ function App() {
     onChange: function onChange(e) {
       return setSearch(e.target.value);
     },
-    placeholder: t("Sök…",lang),
+    placeholder: "S\xF6k\u2026",
     style: _objectSpread(_objectSpread({}, inp), {}, {
       width: 140,
       padding: "0.35rem 0.6rem"
@@ -2264,7 +2412,7 @@ function App() {
         textTransform: "uppercase",
         letterSpacing: "0.05em"
       })
-    }, c === "all" ? t("Alla",lang) : CAT_NAMES[c]);
+    }, c === "all" ? "Alla" : CAT_NAMES[c]);
   })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
@@ -2294,7 +2442,7 @@ function App() {
       paddingBottom: "0.4rem",
       borderBottom: "1px solid ".concat(border)
     }
-  }, t("Välj upp till 4 tekniker",lang)), CATS.map(function (cat) {
+  }, "V\xE4lj upp till 4 tekniker"), CATS.map(function (cat) {
     var items = filteredTechs.filter(function (t) {
       return t.cat === cat;
     });
@@ -2660,7 +2808,7 @@ function App() {
       textAlign: "center",
       marginTop: 6
     }
-  }, "Fylld = startteknik \xB7 Genomskinlig = kombination \xB7 \u2B50 = specialteknik")), /*#__PURE__*/React.createElement("div", {
+  }, t("Fylld = startteknik · Genomskinlig = kombination · ⭐ = specialteknik",lang))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       justifyContent: "flex-end",
@@ -2682,7 +2830,7 @@ function App() {
       fontWeight: 700,
       letterSpacing: "0.06em"
     }
-  }, "Kampkoncept \u2192")), /*#__PURE__*/React.createElement("div", {style:{marginTop:16,borderTop:"2px solid #e0d8cc",paddingTop:14}}, /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid,fontWeight:700,marginBottom:6}}, t("Kampkub",lang)), /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.65rem",color:mid,marginBottom:12,lineHeight:1.4}}, t("Varje nivå är en situation i kampen, från idealläge till maximalt farligt. Använd förslagen eller skriv egna.",lang)), /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:14,flexWrap:"wrap"}}, /*#__PURE__*/React.createElement("div", {style:{flex:"0 0 auto"}}, /*#__PURE__*/React.createElement(KubSVG, {layers:players[activePlayerIdx].layers||EMPTY_LAYERS,activeRow:null,onRowClick:function(){}})), /*#__PURE__*/React.createElement("div", {style:{flex:1,minWidth:200,display:"flex",flexDirection:"column",gap:8}}, (players[activePlayerIdx].layers||EMPTY_LAYERS).map(function(layer,i){var ref=REFERENCE[i];return /*#__PURE__*/React.createElement("div", {key:i,style:{padding:"8px 10px",borderRadius:6,background:layer.bg||"#f5f5f5",border:"1px solid "+(layer.bdr||"#ddd")}},/*#__PURE__*/React.createElement("div", {style:{fontSize:"0.55rem",fontWeight:700,color:layer.tc||"#333",marginBottom:3}}, t("Nivå",lang)+" "+(i+1)+(ref?(" — "+t(ref.name,lang)):"")), ref?/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.56rem",color:layer.tc||"#555",opacity:0.85,marginBottom:5,lineHeight:1.3}},t(ref.sub,lang)+": "+ref.pts.map(function(p){return t(p,lang);}).join(" · ")):null, ref&&!layer.name?/*#__PURE__*/React.createElement("button",{onClick:function(){setPlayers(function(p){return p.map(function(pl,pi){if(pi!==activePlayerIdx)return pl;var lrs=(pl.layers||EMPTY_LAYERS).map(function(l,li){return li===i?Object.assign({},l,{name:ref.name,sub:ref.sub,pts:ref.pts.slice()}):l;});return Object.assign({},pl,{layers:lrs});});});},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.55rem",padding:"3px 9px",borderRadius:4,cursor:"pointer",background:layer.bdr||"#999",border:"1px solid "+(layer.bdr||"#999"),color:"#fff",fontWeight:600,marginBottom:5}},t("Anv\u00e4nd f\u00f6rslag",lang)):null, /*#__PURE__*/React.createElement("input", {value:layer.name||"",placeholder:ref?t(ref.name,lang):t("Namn på situation…",lang),onChange:function(ev){var v=ev.target.value;setPlayers(function(p){return p.map(function(pl,pi){if(pi!==activePlayerIdx)return pl;var lrs=(pl.layers||EMPTY_LAYERS).map(function(l,li){return li===i?Object.assign({},l,{name:v}):l;});return Object.assign({},pl,{layers:lrs});});});},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.68rem",padding:"3px 7px",borderRadius:4,border:"1px solid "+(layer.bdr||"#ccc"),background:"rgba(255,255,255,0.7)",color:"#1a1410",width:"100%",marginBottom:4,outline:"none",boxSizing:"border-box"}}), /*#__PURE__*/React.createElement("textarea", {value:(layer.pts||[""]).join("\n"),placeholder:ref?ref.pts.map(function(p){return t(p,lang);}).join("\n"):t("Punkter (en per rad)…",lang),onChange:function(ev){var v=ev.target.value.split("\n");setPlayers(function(p){return p.map(function(pl,pi){if(pi!==activePlayerIdx)return pl;var lrs=(pl.layers||EMPTY_LAYERS).map(function(l,li){return li===i?Object.assign({},l,{pts:v}):l;});return Object.assign({},pl,{layers:lrs});});});},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.65rem",padding:"3px 7px",borderRadius:4,border:"1px solid "+(layer.bdr||"#ccc"),background:"rgba(255,255,255,0.7)",color:"#1a1410",width:"100%",minHeight:46,resize:"vertical",outline:"none",boxSizing:"border-box"}}));}))))), false && mainTab === "lottning" && /*#__PURE__*/React.createElement("div", {
+  }, "Kampkoncept \u2192"))), mainTab === "lottning" && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 600,
       margin: "0 auto",
@@ -2718,7 +2866,7 @@ function App() {
       color: "#8a7a6a",
       marginBottom: 8
     }
-  }, "Klistra in lottningen i JSON-format nedan. Exempel:"), /*#__PURE__*/React.createElement("pre", {
+  }, t("Klistra in lottningen i JSON-format nedan. Exempel:",lang)), /*#__PURE__*/React.createElement("pre", {
     style: {
       fontSize: "0.58rem",
       background: "#1a1410",
@@ -2730,7 +2878,7 @@ function App() {
       lineHeight: 1.5
     }
   }, "{\n  \"weightClass\": \"-90 kg\",\n  \"pools\": [\n    { \"name\": \"A\", \"athletes\": [\n      { \"name\": \"F\xD6RNAMN EFTERNAMN\", \"country\": \"SWE\" }\n    ]}\n  ],\n  \"repechage\": [\n    { \"name\": \"F\xD6RNAMN EFTERNAMN\", \"country\": \"SWE\" }\n  ]\n}"), /*#__PURE__*/React.createElement("textarea", {
-    placeholder: "Klistra in JSON-lottning h\xE4r\u2026",
+    placeholder: t("Klistra in JSON-lottning här…",lang),
     rows: 8,
     style: {
       width: "100%",
@@ -2978,7 +3126,7 @@ function App() {
       textAlign: "center",
       marginTop: 8
     }
-  }, "Klicka p\xE5 en motst\xE5ndare f\xF6r att \xF6ppna deras profil"))), false && mainTab === "motstand" && /*#__PURE__*/React.createElement("div", {
+  }, "Klicka p\xE5 en motst\xE5ndare f\xF6r att \xF6ppna deras profil"))), mainTab === "motstand" && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 560,
       margin: "0 auto",
@@ -3180,7 +3328,7 @@ function App() {
       fontWeight: 700,
       marginBottom: 4
     }
-  }, "Din stans & Kumikata"), stance && /*#__PURE__*/React.createElement("div", {
+  }, t("Din stans & Kumikata",lang)), stance && /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: "0.68rem",
       fontWeight: 700,
@@ -3191,7 +3339,7 @@ function App() {
       display: "inline-block",
       marginBottom: 4
     }
-  }, stance === "höger" ? t("► Höger",lang) : t("◄ Vänster",lang)), /*#__PURE__*/React.createElement("div", {
+  }, stance === "höger" ? "► Höger" : "◄ Vänster"), /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: "0.72rem",
       fontWeight: 700,
@@ -3210,7 +3358,7 @@ function App() {
       fontWeight: 400,
       fontStyle: "italic"
     }
-  }, "Ej valt"))), /*#__PURE__*/React.createElement("div", {
+  }, t("Ej valt",lang)))), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexDirection: "column",
@@ -3224,7 +3372,7 @@ function App() {
       fontWeight: 700,
       marginBottom: 2
     }
-  }, "Motst\xE5ndarens stans & grepp"), /*#__PURE__*/React.createElement("div", {
+  }, t("Motståndarens stans & grepp",lang)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       gap: 4
@@ -3272,7 +3420,7 @@ function App() {
     return /*#__PURE__*/React.createElement("option", {
       key: g,
       value: g
-    }, g);
+    }, t(g,lang));
   })))), oppGrepp && function (_KUMI_TIPS$favGrepp, _KUMI_TIPS$HögerKumi, _KUMI_TIPS$VänsterKu) {
     var counterIds = ((_KUMI_TIPS$favGrepp = KUMI_TIPS[favGrepp]) === null || _KUMI_TIPS$favGrepp === void 0 ? void 0 : _KUMI_TIPS$favGrepp[oppGrepp]) || (stance === "höger" ? (_KUMI_TIPS$HögerKumi = KUMI_TIPS["Höger kumi (krage + ärm)"]) === null || _KUMI_TIPS$HögerKumi === void 0 ? void 0 : _KUMI_TIPS$HögerKumi[oppGrepp] : (_KUMI_TIPS$VänsterKu = KUMI_TIPS["Vänster kumi (krage + ärm)"]) === null || _KUMI_TIPS$VänsterKu === void 0 ? void 0 : _KUMI_TIPS$VänsterKu[oppGrepp]) || [];
     var counters = counterIds.map(function (id) {
@@ -3295,7 +3443,7 @@ function App() {
         fontWeight: 700,
         marginBottom: 6
       }
-    }, "\u2605 Mottekniker mot ", oppGrepp), /*#__PURE__*/React.createElement("div", {
+    }, t("\u2605 Mottekniker mot ",lang), oppGrepp), /*#__PURE__*/React.createElement("div", {
       style: {
         display: "flex",
         flexWrap: "wrap",
@@ -3334,7 +3482,7 @@ function App() {
       fontWeight: 700,
       marginBottom: 8
     }
-  }, "Motst\xE5ndares startteknik"), /*#__PURE__*/React.createElement("div", {
+  }, t("Motståndares startteknik",lang)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "flex",
       flexWrap: "wrap",
@@ -3567,7 +3715,7 @@ function App() {
       fontWeight: 700,
       letterSpacing: "0.06em"
     }
-  }, "N\xE4sta \u2192 Tori vs Uke"))), false && mainTab === "foruts" && /*#__PURE__*/React.createElement("div", {
+  }, "N\xE4sta \u2192 Tori vs Uke"))), mainTab === "foruts" && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 600,
       margin: "0 auto",
@@ -3581,7 +3729,7 @@ function App() {
       color: mid,
       marginBottom: 12
     }
-  }, "Din profil mot motst\xE5ndaren"), /*#__PURE__*/React.createElement("div", {
+  }, t("Din profil mot motståndaren",lang)), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
       gridTemplateColumns: "1fr 1fr",
@@ -3629,7 +3777,7 @@ function App() {
       fontSize: "0.78rem",
       fontWeight: 700
     }
-  }, stance ? "".concat(stance === "höger" ? t("► Höger",lang) : t("◄ Vänster",lang)) : /*#__PURE__*/React.createElement("span", {
+  }, stance ? "".concat(stance === "höger" ? "► Höger" : "◄ Vänster") : /*#__PURE__*/React.createElement("span", {
     style: {
       color: mid,
       fontStyle: "italic",
@@ -3654,7 +3802,7 @@ function App() {
       fontSize: "0.78rem",
       fontWeight: 700
     }
-  }, oppStance === "höger" ? t("► Höger",lang) : t("◄ Vänster",lang)) : /*#__PURE__*/React.createElement("div", {
+  }, oppStance === "höger" ? "► Höger" : "◄ Vänster") : /*#__PURE__*/React.createElement("div", {
     style: {
       fontSize: "0.78rem",
       fontWeight: 400,
@@ -4038,7 +4186,7 @@ function App() {
       fontWeight: 700,
       letterSpacing: "0.06em"
     }
-  }, "N\xE4sta \u2192 Strategi & Taktik"))), mainTab === "strategi" && /*#__PURE__*/React.createElement("div", {
+  }, "N\xE4sta \u2192 Strategi & Taktik")), /*#__PURE__*/React.createElement("div", {style:{background:paper,border:"1.5px solid "+border,borderRadius:8,padding:"0.8rem 1rem",marginTop:12}}, /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.52rem",textTransform:"uppercase",letterSpacing:"0.12em",color:mid,fontWeight:700,marginBottom:8}}, t("Kampstil",lang)), /*#__PURE__*/React.createElement("div", {style:{display:"flex",flexDirection:"column",gap:10}}, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.5rem",textTransform:"uppercase",color:mid,marginBottom:4}}, t("F\u00f6redrar att m\u00f6ta",lang)), /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}}, [["h\u00f6ger",t("\u25ba H\u00f6ger",lang)],["v\u00e4nster",t("\u25c4 V\u00e4nster",lang)],["b\u00e5da",t("B\u00e5da",lang)]].map(function(pair){var v=pair[0],label=pair[1];var active=activePlayer.prefOpponent===v;return /*#__PURE__*/React.createElement("button",{key:v,onClick:function(){return updatePlayer("prefOpponent",v);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.65rem",padding:"4px 10px",borderRadius:4,cursor:"pointer",fontWeight:active?700:400,background:active?ink:"transparent",color:active?paper:ink,border:"1.5px solid "+(active?ink:border)}},label);}))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.5rem",textTransform:"uppercase",color:mid,marginBottom:4}}, t("Greppstil",lang)), /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}}, [["offensiv",t("Offensiv",lang)],["defensiv",t("Defensiv",lang)],["kontroll",t("Kontroll",lang)]].map(function(pair){var v=pair[0],label=pair[1];var active=activePlayer.greppStyle===v;return /*#__PURE__*/React.createElement("button",{key:v,onClick:function(){return updatePlayer("greppStyle",v);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.65rem",padding:"4px 10px",borderRadius:4,cursor:"pointer",fontWeight:active?700:400,background:active?ink:"transparent",color:active?paper:ink,border:"1.5px solid "+(active?ink:border)}},label);}))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {style:{fontSize:"0.5rem",textTransform:"uppercase",color:mid,marginBottom:4}}, t("Distans",lang)), /*#__PURE__*/React.createElement("div", {style:{display:"flex",gap:6,flexWrap:"wrap"}}, [["kort",t("Kort",lang)],["l\u00e5ng",t("L\u00e5ng",lang)],["varierad",t("Varierad",lang)]].map(function(pair){var v=pair[0],label=pair[1];var active=activePlayer.distans===v;return /*#__PURE__*/React.createElement("button",{key:v,onClick:function(){return updatePlayer("distans",v);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.65rem",padding:"4px 10px",borderRadius:4,cursor:"pointer",fontWeight:active?700:400,background:active?ink:"transparent",color:active?paper:ink,border:"1.5px solid "+(active?ink:border)}},label);})))))), mainTab === "strategi" && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 580,
       margin: "0 auto",
@@ -4065,7 +4213,7 @@ function App() {
       padding: "2px 7px",
       borderRadius: 3
     }
-  }, stance === "höger" ? t("► Höger",lang) : t("◄ Vänster",lang)), favGrepp && /*#__PURE__*/React.createElement("span", {
+  }, stance === "höger" ? "► Höger" : "◄ Vänster"), favGrepp && /*#__PURE__*/React.createElement("span", {
     style: {
       fontSize: "0.6rem",
       background: "#fdf8ee",
@@ -4112,7 +4260,23 @@ function App() {
       justifyContent: "flex-end",
       marginTop: 12
     }
-  }, )), mainTab === "matchanalys" && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setMainTab("matchanalys");
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.65rem",
+      padding: "8px 16px",
+      borderRadius: 5,
+      cursor: "pointer",
+      background: red,
+      border: "1px solid ".concat(red),
+      color: "#fff",
+      fontWeight: 700,
+      letterSpacing: "0.06em"
+    }
+  }, "N\xE4sta \u2192 Match Analys"))), mainTab === "matchanalys" && /*#__PURE__*/React.createElement("div", {
     style: {
       maxWidth: 580,
       margin: "0 auto",
@@ -4877,7 +5041,710 @@ function App() {
       fontWeight: 700,
       letterSpacing: "0.06em"
     }
-  }, "\u2B07 Spara match som PDF"))), mainTab === "koncept" && /*#__PURE__*/React.createElement("div",{style:{maxWidth:600,margin:"0 auto",padding:"0.8rem 0.6rem",display:"flex",flexDirection:"column",gap:14}},/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.52rem",textTransform:"uppercase",color:mid,fontWeight:700}},t("Min spelstrategi mot motstandaren",lang)),/*#__PURE__*/React.createElement("div",{style:{background:paper,border:"1.5px solid "+border,borderRadius:10,overflow:"hidden"}},/*#__PURE__*/React.createElement("div",{style:{padding:"8px 14px",background:"#2c5f8a"}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.6rem",fontWeight:700,color:"#fff",textTransform:"uppercase"}},t("Stand",lang))),/*#__PURE__*/React.createElement("div",{style:{padding:"12px 14px",display:"flex",flexDirection:"column",gap:10}},/*#__PURE__*/React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:mid,fontWeight:600,minWidth:80}},t("Mitt stand:",lang)),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.8rem",fontWeight:700,color:ink,padding:"4px 12px",background:bg,border:"1.5px solid "+border,borderRadius:5}},activePlayer.stance==="höger"?t("► Höger",lang):activePlayer.stance==="vänster"?t("◄ Vänster",lang):activePlayer.stance||"— (välj i Teknik)")),/*#__PURE__*/React.createElement("div",{style:{display:"flex",alignItems:"center",gap:10,flexWrap:"wrap"}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:mid,fontWeight:600,minWidth:80}},t("Motståndare:",lang)),/*#__PURE__*/React.createElement("div",{style:{display:"flex",gap:6}},[["HH",t("► Höger",lang)],["HV",t("◄ Vänster",lang)]].map(function(p){var v=p[0],l=p[1],a=kpScenario===v;return /*#__PURE__*/React.createElement("button",{key:v,onClick:function(){setKpScenario(v);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.72rem",padding:"6px 14px",borderRadius:6,cursor:"pointer",fontWeight:a?700:400,background:a?"#2c5f8a":"transparent",color:a?"#fff":ink,border:"2px solid "+(a?"#2c5f8a":border)}},l);})),activePlayer.stance?/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.65rem",color:mid,fontStyle:"italic"}},t("Scenario: ",lang)+(activePlayer.stance==="höger"?t("Höger",lang):activePlayer.stance==="vänster"?t("Höger",lang):"")+t(" vs ",lang)+(kpScenario==="HH"?t("Höger",lang):t("Vänster",lang))):null))),/*#__PURE__*/React.createElement("div",{style:{background:paper,border:"1.5px solid "+border,borderRadius:10,overflow:"hidden"}},/*#__PURE__*/React.createElement("div",{style:{padding:"8px 14px",background:"#555"}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.6rem",fontWeight:700,color:"#fff",textTransform:"uppercase"}},t("Motståndarens längd",lang))),/*#__PURE__*/React.createElement("div",{style:{padding:"12px 14px",display:"flex",gap:8,flexWrap:"wrap"}},[["kortare",t("Kortare",lang)],["langre",t("Längre",lang)],["lika",t("Liknande",lang)]].map(function(p){var v=p[0],l=p[1],a=kpOppLen===v;return /*#__PURE__*/React.createElement("button",{key:v,onClick:function(){setKpOppLen(a?"":v);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.72rem",padding:"8px 14px",borderRadius:6,cursor:"pointer",fontWeight:a?700:400,background:a?"#555":"transparent",color:a?"#fff":ink,border:"2px solid "+(a?"#555":border),flex:"1 1 80px",textAlign:"center"}},l);}))),/*#__PURE__*/React.createElement("div",{style:{background:paper,border:"1.5px solid "+border,borderRadius:10,overflow:"hidden"}},/*#__PURE__*/React.createElement("div",{style:{padding:"8px 14px",background:"#8a6a1a"}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.6rem",fontWeight:700,color:"#fff",textTransform:"uppercase"}},t("Motståndarens greppning",lang))),/*#__PURE__*/React.createElement("div",{style:{padding:"10px 14px",display:"flex",flexWrap:"wrap",gap:5}},GREPP_OPTIONS.map(function(g){var a=kpOppGr===g;return /*#__PURE__*/React.createElement("button",{key:g,onClick:function(){setKpOppGr(a?"":g);},style:{fontFamily:"'DM Sans',sans-serif",fontSize:"0.68rem",padding:"4px 10px",borderRadius:20,cursor:"pointer",fontWeight:a?700:400,background:a?"#8a6a1a":"transparent",color:a?"#fff":"#5a4a2a",border:"1.5px solid "+(a?"#8a6a1a":"#c8b090"),transition:"all 0.1s"}},t(g,lang));}))),/*#__PURE__*/React.createElement("div",{style:{background:"#f0f5ff",border:"1.5px solid #c0d0e8",borderRadius:10,overflow:"hidden"}},/*#__PURE__*/React.createElement("div",{style:{padding:"8px 14px",background:"#1a3a5a",display:"flex",justifyContent:"space-between",alignItems:"center"}},/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.6rem",fontWeight:700,color:"#fff",textTransform:"uppercase"}},t("Förslag på strategi",lang)),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.5rem",color:"#a0c0e0",fontStyle:"italic"}},t("+ Coach-databas kommer",lang))),/*#__PURE__*/React.createElement("div",{style:{padding:"12px 14px",display:"flex",flexDirection:"column",gap:14}},/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#2c5f8a",fontWeight:700,marginBottom:6,letterSpacing:"0.1em"}},kpScenario==="HH"?t("Höger vs Höger",lang):t("Höger vs Vänster",lang)),/*#__PURE__*/React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:5}},(kpScenario==="HH"?["Klassiskt höger-höger — kämpa om inre tsurite-position","O-uchi-gari och seoi-nage fungerar bra från right vs right","Håll motståndaren i rörelse med ko-uchi och de-ashi","Timing: kasta när motståndaren tar steg in"]:["Spegelsituation — motståndaren har öppen höger sida mot dig","O-soto-gari och ko-uchi-gari direkt till motståndarens öppna sida","Var försiktig med motståndarens seoi-nage och tai-otoshi","Kontrollera korsgreppet tidigt — det är svårare i HV-läge"]).map(function(txt,i){return /*#__PURE__*/React.createElement("div",{key:i,style:{display:"flex",gap:8,alignItems:"flex-start"}},/*#__PURE__*/React.createElement("span",{style:{color:"#2c5f8a",flexShrink:0,fontSize:"0.7rem"}},"•"),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.72rem",color:"#1a1410",lineHeight:1.45}},t(txt,lang)));}))),kpOppGr?/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#8a6a1a",fontWeight:700,marginBottom:6,letterSpacing:"0.1em"}},t("Mot: ",lang)+t(kpOppGr,lang)),/*#__PURE__*/React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:5}},(kpOppGr.indexOf("Nackgrepp")>=0?["Motståndarens tsurite är hög — undvik seoi uppifrån","Använd tai-otoshi eller o-soto-gari","Håll distans och kontra vid framtrycket"]:kpOppGr.indexOf("Armhåls")>=0?["Farlig kastposition — håll höfterna bakåt","Kontra med o-uchi-gari i rörelse","Bryt med nedwåtrörelse"]:kpOppGr.indexOf("Dubbel")>=0?["Kontrollgrepp — rör dig i cirklar","Ko-soto och de-ashi i sidled","Vänta på öppning vid greppbyte"]:kpOppGr.indexOf("Kors")>=0?["Korsgrepp ger inre fördel","Håll din tsurite hög","O-uchi och tai-otoshi fungerar väl"]:kpOppGr.indexOf("Höger kumi")>=0?["Standard höger kumi — använd din favoritgrepp","Kämpa om tsurite-kontrollen","Ashi-waza för att öppna upp"]:["Läs motståndarens greppförsök","Anpassa tsurite efter greppen","Bryt grepp direkt och gå in"]).map(function(txt,i){return /*#__PURE__*/React.createElement("div",{key:i,style:{display:"flex",gap:8,alignItems:"flex-start"}},/*#__PURE__*/React.createElement("span",{style:{color:"#8a6a1a",flexShrink:0,fontSize:"0.7rem"}},"•"),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.72rem",color:"#1a1410",lineHeight:1.45}},t(txt,lang)));}))):null,kpOppLen?/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#555",fontWeight:700,marginBottom:5,letterSpacing:"0.1em"}},t("Längdfördel",lang)),/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.72rem",color:"#1a1410",lineHeight:1.5}},kpOppLen==="kortare"?t("▼ Kortare motståndare — din räckvidd är längre. Använd ashi-waza och ha-barai från öppen position.",lang):kpOppLen==="langre"?t("▲ Längre motståndare — gå in på nära håll. Ko-soto, o-uchi och koshi-waza får dubbel effekt.",lang):t("▬ Liknande längd — teknikval avgörs av grepp, timing och footwork.",lang))):null,standardTechs.length>0?/*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#c0392b",fontWeight:700,marginBottom:6,letterSpacing:"0.1em"}},t("Dina tekniker i detta läge",lang)),/*#__PURE__*/React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:5}},standardTechs.slice(0,4).map(function(t,i){var cc=CAT_COLOR[t.cat];var cb=selectedCombos[t.id]?techniques.find(function(x){return x.id===selectedCombos[t.id];}):null;return /*#__PURE__*/React.createElement("div",{key:t.id,style:{display:"flex",alignItems:"center",gap:10,padding:"7px 12px",background:cc.bg,borderRadius:7,border:"1px solid "+cc.bdr}},/*#__PURE__*/React.createElement("div",{style:{width:22,height:22,borderRadius:"50%",background:cc.dot,display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.62rem",fontWeight:700,color:"#fff",flexShrink:0}},i+1),/*#__PURE__*/React.createElement("div",{style:{flex:1}},/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.75rem",fontWeight:700,color:cc.dot}},t.sv),/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.55rem",color:mid}},CAT_NAMES[t.cat]||t.cat)),cb?/*#__PURE__*/React.createElement("div",{style:{display:"flex",alignItems:"center",gap:4}},/*#__PURE__*/React.createElement("span",{style:{color:mid,fontSize:"0.7rem"}},"→"),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.68rem",fontWeight:600,color:"#1a1410"}},cb.sv)):null);}))):null,(function(){var layers=activePlayer.layers||[];var kTips=layers.filter(function(l){return l.name&&l.pts&&l.pts.some(function(p){return p&&p.trim();});});if(!kTips.length)return null;return /*#__PURE__*/React.createElement("div",null,/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#3B7A18",fontWeight:700,marginBottom:6,letterSpacing:"0.1em"}},t("Från din kampkub",lang)),/*#__PURE__*/React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:6}},kTips.map(function(layer,i){return /*#__PURE__*/React.createElement("div",{key:i,style:{padding:"6px 10px",borderRadius:6,background:layer.bg||"#f5f5f5",border:"1px solid "+(layer.bdr||"#ddd")}},/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.6rem",fontWeight:700,color:layer.tc||"#333",marginBottom:3}},layer.name),/*#__PURE__*/React.createElement("div",{style:{display:"flex",flexDirection:"column",gap:2}},layer.pts.filter(function(p){return p&&p.trim();}).map(function(p,j){return /*#__PURE__*/React.createElement("div",{key:j,style:{display:"flex",gap:6}},/*#__PURE__*/React.createElement("span",{style:{color:layer.tc||"#555",flexShrink:0}},"•"),/*#__PURE__*/React.createElement("span",{style:{fontSize:"0.7rem",color:"#1a1410",lineHeight:1.4}},p));})));})));})(), /*#__PURE__*/React.createElement("div",{style:{borderTop:"1px solid #c0d0e8",paddingTop:10,marginTop:4}},/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.48rem",textTransform:"uppercase",color:"#1a3a5a",fontWeight:700,marginBottom:5,letterSpacing:"0.1em"}},t("Coach-databas",lang)),/*#__PURE__*/React.createElement("div",{style:{fontSize:"0.68rem",color:"#2c5f8a",fontStyle:"italic",lineHeight:1.5}},t("Strategier från kända coacher läggs till här. När du skapar databasen kopplas rätt tips in baserat på scenario och greppning.",lang)))))), showRev && inCombos.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Kan f\xF6reg\xE5s av"), /*#__PURE__*/React.createElement("div", {
+  }, "\u2B07 Spara match som PDF"))), mainTab === "koncept" && /*#__PURE__*/React.createElement("div", {
+    style: {
+      maxWidth: 520,
+      margin: "0 auto",
+      padding: "0.8rem 0.5rem"
+    }
+  }, del1Locked && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#fdf8ee",
+      border: "1.5px solid #b8860b",
+      borderRadius: 7,
+      padding: "7px 12px",
+      marginBottom: 10,
+      display: "flex",
+      alignItems: "center",
+      gap: 8
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.9rem"
+    }
+  }, "\uD83D\uDD12"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.65rem",
+      color: "#b8860b",
+      fontWeight: 700
+    }
+  }, "Del 1 \xE4r l\xE5st \u2014 kampkonceptet \xE4r sparat"), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setDel1Locked(false);
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.55rem",
+      padding: "2px 8px",
+      borderRadius: 3,
+      cursor: "pointer",
+      background: "transparent",
+      border: "1px solid #b8860b",
+      color: "#b8860b",
+      marginLeft: "auto"
+    }
+  }, "\uD83D\uDD13 L\xE5s upp")), /*#__PURE__*/React.createElement(KumiBanner, null), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: paper,
+      border: "1.5px solid ".concat(border),
+      borderRadius: 8,
+      padding: "0.8rem 1rem",
+      marginBottom: 10,
+      pointerEvents: del1Locked ? "none" : "auto",
+      opacity: del1Locked ? 0.75 : 1
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.52rem",
+      textTransform: "uppercase",
+      letterSpacing: "0.12em",
+      color: mid,
+      fontWeight: 700,
+      marginBottom: 8
+    }
+  }, "Kampstil"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.5rem",
+      textTransform: "uppercase",
+      color: mid,
+      marginBottom: 4
+    }
+  }, "F\xF6redrar att m\xF6ta"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, [["höger", "► Höger"], ["vänster", "◄ Vänster"], ["båda", "Båda"]].map(function (_ref1) {
+    var _ref10 = _slicedToArray(_ref1, 2),
+      v = _ref10[0],
+      label = _ref10[1];
+    return /*#__PURE__*/React.createElement("button", {
+      key: v,
+      onClick: function onClick() {
+        return updatePlayer("prefOpponent", v);
+      },
+      style: {
+        fontFamily: "'DM Sans',sans-serif",
+        fontSize: "0.65rem",
+        padding: "4px 10px",
+        borderRadius: 4,
+        cursor: "pointer",
+        fontWeight: activePlayer.prefOpponent === v ? 700 : 400,
+        background: activePlayer.prefOpponent === v ? ink : "transparent",
+        color: activePlayer.prefOpponent === v ? paper : ink,
+        border: "1.5px solid ".concat(activePlayer.prefOpponent === v ? ink : border)
+      }
+    }, label);
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.5rem",
+      textTransform: "uppercase",
+      color: mid,
+      marginBottom: 4
+    }
+  }, "Greppstil"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, [["offensiv", "Offensiv"], ["defensiv", "Defensiv"], ["kontroll", "Kontroll"]].map(function (_ref11) {
+    var _ref12 = _slicedToArray(_ref11, 2),
+      v = _ref12[0],
+      label = _ref12[1];
+    return /*#__PURE__*/React.createElement("button", {
+      key: v,
+      onClick: function onClick() {
+        return updatePlayer("greppStyle", v);
+      },
+      style: {
+        fontFamily: "'DM Sans',sans-serif",
+        fontSize: "0.6rem",
+        padding: "4px 10px",
+        borderRadius: 4,
+        cursor: "pointer",
+        fontWeight: activePlayer.greppStyle === v ? 700 : 400,
+        background: activePlayer.greppStyle === v ? gold : "transparent",
+        color: activePlayer.greppStyle === v ? "#fff" : ink,
+        border: "1.5px solid ".concat(activePlayer.greppStyle === v ? gold : border)
+      }
+    }, label);
+  }))), /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.5rem",
+      textTransform: "uppercase",
+      color: mid,
+      marginBottom: 4
+    }
+  }, "Distans"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, [["kort", "Kort"], ["lång", "Lång"], ["varierad", "Varierad"]].map(function (_ref13) {
+    var _ref14 = _slicedToArray(_ref13, 2),
+      v = _ref14[0],
+      label = _ref14[1];
+    return /*#__PURE__*/React.createElement("button", {
+      key: v,
+      onClick: function onClick() {
+        return updatePlayer("distans", v);
+      },
+      style: {
+        fontFamily: "'DM Sans',sans-serif",
+        fontSize: "0.6rem",
+        padding: "4px 10px",
+        borderRadius: 4,
+        cursor: "pointer",
+        fontWeight: activePlayer.distans === v ? 700 : 400,
+        background: activePlayer.distans === v ? red : "transparent",
+        color: activePlayer.distans === v ? "#fff" : ink,
+        border: "1.5px solid ".concat(activePlayer.distans === v ? red : border)
+      }
+    }, label);
+  }))))), (stance || favGrepp || tech) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: paper,
+      border: "1.5px solid ".concat(border),
+      borderRadius: 7,
+      padding: "8px 12px",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.52rem",
+      textTransform: "uppercase",
+      color: mid,
+      fontWeight: 700
+    }
+  }, "Fr\xE5n Teknik-fliken"), stance && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.68rem",
+      fontWeight: 700,
+      background: ink,
+      color: paper,
+      padding: "2px 8px",
+      borderRadius: 4
+    }
+  }, stance === "höger" ? "► Höger" : "◄ Vänster"), favGrepp && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.68rem",
+      fontWeight: 700,
+      background: "#fdf8ee",
+      color: gold,
+      padding: "2px 8px",
+      borderRadius: 4,
+      border: "1px solid ".concat(gold, "40")
+    }
+  }, t(favGrepp,lang)), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setMainTab("kombdb");
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.55rem",
+      padding: "2px 8px",
+      borderRadius: 3,
+      cursor: "pointer",
+      background: "transparent",
+      border: "1px solid ".concat(mid),
+      color: mid,
+      marginLeft: "auto"
+    }
+  }, "\u2190 \xC4ndra")), standardTechs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 8,
+      paddingTop: 8,
+      borderTop: "1px solid ".concat(border),
+      display: "flex",
+      alignItems: "center",
+      gap: 6,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.52rem",
+      textTransform: "uppercase",
+      color: "#c0392b",
+      fontWeight: 700
+    }
+  }, "\u25CF Standard:"), standardTechs.map(function (t, i) {
+    var cc = CAT_COLOR[t.cat];
+    return /*#__PURE__*/React.createElement("span", {
+      key: t.id,
+      style: {
+        fontSize: "0.72rem",
+        fontWeight: 700,
+        background: "#fde8e6",
+        color: "#c0392b",
+        padding: "3px 10px",
+        borderRadius: 4,
+        border: "1px solid #c0392b40",
+        cursor: "pointer"
+      },
+      onClick: function onClick() {
+        setSelectedId(t.id);
+        setMainTab("kombdb");
+      }
+    }, i + 1, ". ", t.sv);
+  }), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setStandardTechIds([]);
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.5rem",
+      padding: "1px 6px",
+      borderRadius: 3,
+      cursor: "pointer",
+      background: "transparent",
+      border: "1px solid ".concat(mid),
+      color: mid
+    }
+  }, "\u2715")), standardTechs.length > 0 && standardTechs.some(function (t) {
+    return selectedCombos[t.id];
+  }) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6,
+      paddingTop: 6,
+      borderTop: "1px solid ".concat(border),
+      display: "flex",
+      flexDirection: "column",
+      gap: 4
+    }
+  }, standardTechs.map(function (st, i) {
+    var comboId = selectedCombos[st.id];
+    var comboTech = techniques.find(function (t) {
+      return t.id === comboId;
+    });
+    if (!comboTech) return null;
+    var cc2 = CAT_COLOR[comboTech.cat];
+    return /*#__PURE__*/React.createElement("div", {
+      key: st.id,
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
+        flexWrap: "wrap"
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.52rem",
+        textTransform: "uppercase",
+        color: "#c0392b",
+        fontWeight: 700
+      }
+    }, "\u25CF", i + 1), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.65rem",
+        fontWeight: 700,
+        color: "#c0392b"
+      }
+    }, st.sv), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: mid,
+        fontSize: "0.7rem"
+      }
+    }, "\u2192"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.68rem",
+        fontWeight: 700,
+        background: cc2.bg,
+        color: cc2.dot,
+        padding: "2px 8px",
+        borderRadius: 4,
+        border: "1px solid ".concat(cc2.dot, "40"),
+        cursor: "pointer"
+      },
+      onClick: function onClick() {
+        setSelectedId(comboTech.id);
+        setMainTab("kombdb");
+      }
+    }, comboTech.sv), /*#__PURE__*/React.createElement("button", {
+      onClick: function onClick() {
+        return setSelectedCombos(function (p) {
+          var n = _objectSpread({}, p);
+          delete n[st.id];
+          return n;
+        });
+      },
+      style: {
+        fontFamily: "'DM Sans',sans-serif",
+        fontSize: "0.5rem",
+        padding: "1px 5px",
+        borderRadius: 3,
+        cursor: "pointer",
+        background: "transparent",
+        border: "1px solid ".concat(mid),
+        color: mid
+      }
+    }, "\u2715"));
+  })), (oppTech || oppGrepp) && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: 6,
+      paddingTop: 6,
+      borderTop: "1px solid ".concat(border),
+      display: "flex",
+      alignItems: "center",
+      gap: 8,
+      flexWrap: "wrap"
+    }
+  }, /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.52rem",
+      textTransform: "uppercase",
+      color: "#c0392b",
+      fontWeight: 700
+    }
+  }, "Motst\xE5ndare:"), oppName && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.72rem",
+      fontWeight: 700,
+      color: "#c0392b"
+    }
+  }, oppName), oppCountry && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.62rem",
+      color: mid
+    }
+  }, oppCountry), oppWeight && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.62rem",
+      background: "#fde8e6",
+      color: "#c0392b",
+      padding: "1px 6px",
+      borderRadius: 3,
+      fontWeight: 600
+    }
+  }, oppWeight), oppTechs.map(function (t, i) {
+    return /*#__PURE__*/React.createElement("span", {
+      key: t.id,
+      style: {
+        fontSize: "0.68rem",
+        fontWeight: 700,
+        background: "#fde8e6",
+        color: "#c0392b",
+        padding: "2px 8px",
+        borderRadius: 4,
+        border: "1px solid #c0392b40",
+        cursor: "pointer"
+      },
+      onClick: function onClick() {
+        return setMainTab("motstand");
+      }
+    }, i + 1, ". ", t.sv);
+  }), oppGrepp && /*#__PURE__*/React.createElement("span", {
+    style: {
+      fontSize: "0.65rem",
+      color: "#8a4a2c",
+      fontWeight: 600,
+      background: "#faeae0",
+      padding: "2px 8px",
+      borderRadius: 4
+    }
+  }, oppGrepp), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setMainTab("motstand");
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.5rem",
+      padding: "1px 6px",
+      borderRadius: 3,
+      cursor: "pointer",
+      background: "transparent",
+      border: "1px solid #c0392b",
+      color: "#c0392b"
+    }
+  }, "\u2190 \xC4ndra"))), recTechs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f0fae8",
+      border: "1.5px solid ".concat(green),
+      borderRadius: 7,
+      padding: "8px 12px",
+      marginBottom: 10
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.52rem",
+      textTransform: "uppercase",
+      color: green,
+      fontWeight: 700,
+      marginBottom: 6
+    }
+  }, "\u2605 Rekommenderade tekniker"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 5
+    }
+  }, recTechs.map(function (t) {
+    var cc = CAT_COLOR[t.cat];
+    return /*#__PURE__*/React.createElement("span", {
+      key: t.id,
+      onClick: function onClick() {
+        setSelectedId(t.id);
+        setMainTab("kombdb");
+      },
+      style: {
+        fontSize: "0.68rem",
+        fontWeight: 700,
+        background: cc.tag,
+        color: cc.dot,
+        padding: "3px 8px",
+        borderRadius: 4,
+        cursor: "pointer",
+        border: "1px solid ".concat(cc.dot, "40")
+      }
+    }, t.sv);
+  }))), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      justifyContent: "flex-end",
+      marginTop: 10
+    }
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      return setMainTab("situationer");
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.65rem",
+      padding: "8px 16px",
+      borderRadius: 5,
+      cursor: "pointer",
+      background: "#1a1410",
+      border: "1px solid #1a1410",
+      color: "#fff",
+      fontWeight: 700
+    }
+  }, "Situationer & Kubvy \u2192")), direkt.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Direkta kombinationer"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gap: "0.45rem",
+      marginBottom: "1rem"
+    }
+  }, direkt.map(function (c, i) {
+    var to = techniques.find(function (t) {
+      return t.id === c.to;
+    });
+    if (!to) return null;
+    var tcc = CAT_COLOR[to.cat];
+    var isSelCombo = selectedComboId === to.id;
+    return /*#__PURE__*/React.createElement(ComboCard, {
+      key: i,
+      accent: isSelCombo ? "#b8860b" : red,
+      onClick: function onClick() {
+        setSelectedId(to.id);
+        setSelectedComboId(to.id);
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700,
+        fontSize: "0.76rem"
+      }
+    }, tech.sv), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: red,
+        margin: "0 0.4rem"
+      }
+    }, "\u2192"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.76rem"
+      }
+    }, to.sv), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.5rem",
+        textTransform: "uppercase",
+        background: tcc.tag,
+        color: tcc.dot,
+        padding: "0.1rem 0.35rem",
+        borderRadius: 2,
+        marginLeft: "0.4rem"
+      }
+    }, CAT_NAMES[to.cat]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.6rem",
+        color: mid,
+        marginTop: "0.15rem"
+      }
+    }, c.note));
+  }))), motror.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Motr\xF6relse \u2014 uke motarbetar"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "grid",
+      gap: "0.45rem",
+      marginBottom: "1rem"
+    }
+  }, motror.map(function (c, i) {
+    var to = techniques.find(function (t) {
+      return t.id === c.to;
+    });
+    if (!to) return null;
+    var tcc = CAT_COLOR[to.cat];
+    var isSelCombo = selectedComboId === to.id;
+    return /*#__PURE__*/React.createElement(ComboCard, {
+      key: i,
+      accent: isSelCombo ? "#b8860b" : mid,
+      onClick: function onClick() {
+        setSelectedId(to.id);
+        setSelectedComboId(to.id);
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontWeight: 700,
+        fontSize: "0.76rem"
+      }
+    }, tech.sv), /*#__PURE__*/React.createElement("span", {
+      style: {
+        color: mid,
+        margin: "0 0.4rem"
+      }
+    }, "\u2197"), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.76rem"
+      }
+    }, to.sv), /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "0.5rem",
+        textTransform: "uppercase",
+        background: tcc.tag,
+        color: tcc.dot,
+        padding: "0.1rem 0.35rem",
+        borderRadius: 2,
+        marginLeft: "0.4rem"
+      }
+    }, CAT_NAMES[to.cat]), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.6rem",
+        color: mid,
+        marginTop: "0.15rem"
+      }
+    }, c.note));
+  }))), ashiFollowUp.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Standard: Ashi-waza \xF6ppnar upp"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      background: "#f0fae8",
+      border: "1px solid #3B7A18",
+      borderRadius: 6,
+      padding: "8px 10px",
+      marginBottom: "1rem"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    style: {
+      fontSize: "0.58rem",
+      color: "#27500A",
+      marginBottom: 6
+    }
+  }, "Attack med ", tech.sv, " skapar obalans \u2014 f\xF6lj upp med Te-waza eller Koshi-waza:"), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: 5
+    }
+  }, ashiFollowUp.map(function (t) {
+    var tcc = CAT_COLOR[t.cat];
+    return /*#__PURE__*/React.createElement("span", {
+      key: t.id,
+      onClick: function onClick() {
+        return setSelectedId(t.id);
+      },
+      style: {
+        fontSize: "0.65rem",
+        fontWeight: 700,
+        background: tcc.tag,
+        color: tcc.dot,
+        padding: "3px 8px",
+        borderRadius: 4,
+        cursor: "pointer",
+        border: "1px solid ".concat(tcc.dot, "40")
+      }
+    }, t.sv);
+  })))), function () {
+    var neTransitions = outCombos.filter(function (c) {
+      return c.typ === "ne-waza";
+    });
+    if (!neTransitions.length) return null;
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Ne-waza \xF6verg\xE5ng"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        background: "#e8f5fa",
+        border: "1px solid #2c6a8a",
+        borderRadius: 6,
+        padding: "8px 10px",
+        marginBottom: "1rem"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.58rem",
+        color: "#2c6a8a",
+        marginBottom: 6,
+        fontWeight: 600
+      }
+    }, "Efter ", tech.sv, " \u2014 g\xE5 ner och kontrollera:"), /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexDirection: "column",
+        gap: 5
+      }
+    }, neTransitions.map(function (c, i) {
+      var to = techniques.find(function (t) {
+        return t.id === c.to;
+      });
+      if (!to) return null;
+      var tcc = CAT_COLOR[to.cat];
+      return /*#__PURE__*/React.createElement("div", {
+        key: i,
+        onClick: function onClick() {
+          return setSelectedId(to.id);
+        },
+        style: {
+          display: "flex",
+          alignItems: "center",
+          gap: 8,
+          padding: "6px 8px",
+          background: "#faf8f3",
+          border: "1px solid ".concat(tcc.dot, "40"),
+          borderLeft: "3px solid ".concat(tcc.dot),
+          borderRadius: 4,
+          cursor: "pointer"
+        }
+      }, /*#__PURE__*/React.createElement("div", {
+        style: {
+          flex: 1
+        }
+      }, /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "0.75rem",
+          fontWeight: 700,
+          color: tcc.dot
+        }
+      }, to.sv), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "0.6rem",
+          color: "#8a7a6a",
+          marginLeft: 6
+        }
+      }, CAT_NAMES[to.cat])), /*#__PURE__*/React.createElement("span", {
+        style: {
+          fontSize: "0.6rem",
+          color: "#8a7a6a"
+        }
+      }, c.note));
+    }))));
+  }()), showRev && inCombos.length > 0 && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Divider, null, "Kan f\xF6reg\xE5s av"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: "grid",
       gap: "0.45rem",
@@ -4909,8 +5776,21 @@ function App() {
       style: {
         fontSize: "0.76rem"
       }
-    }, tech.sv));
-  }))), outCombos.length === 0 && ashiFollowUp.length === 0 && /*#__PURE__*//*#__PURE__*/React.createElement("div", {
+    }, tech.sv), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.6rem",
+        color: mid,
+        marginTop: "0.15rem"
+      }
+    }, c.note));
+  }))), outCombos.length === 0 && ashiFollowUp.length === 0 && /*#__PURE__*/React.createElement("div", {
+    style: {
+      color: mid,
+      fontSize: "0.72rem",
+      marginTop: "1rem",
+      fontStyle: "italic"
+    }
+  }, "Inga kombinationer registrerade."), /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: "1rem",
       paddingTop: "0.8rem",
@@ -5067,7 +5947,7 @@ function KumikataWizard(_ref17) {
     return /*#__PURE__*/React.createElement("option", {
       key: g,
       value: g
-    }, g);
+    }, t(g,lang));
   })), uke && /*#__PURE__*/React.createElement("div", {
     style: {
       marginTop: 8,
@@ -5253,132 +6133,219 @@ function StrategiBlock(_ref20) {
     recIds = _ref20.recIds,
     setSelectedId = _ref20.setSelectedId,
     setMainTab = _ref20.setMainTab,
-    ink = _ref20.ink, mid = _ref20.mid, border = _ref20.border,
-    red = _ref20.red, gold = _ref20.gold, green = _ref20.green,
-    paper = _ref20.paper, bg = _ref20.bg;
+    ink = _ref20.ink,
+    mid = _ref20.mid,
+    border = _ref20.border,
+    red = _ref20.red,
+    gold = _ref20.gold,
+    green = _ref20.green,
+    paper = _ref20.paper,
+    bg = _ref20.bg;
+  var hasData = stance || favGrepp || standardTechs.length > 0 || oppGrepp || oppTechs.length > 0;
 
-  var e = React.createElement;
+  // Build strategy points based on selections
+  var strategy = [];
 
-  // Build kampkoncept cards based on opponent stance + grepp
-  var cards = [];
-
-  // --- Greppkoncept baserat på motståndares stånd ---
-  if (oppStance) {
-    var isOppRight = oppStance === "höger";
-    var greppTitle = isOppRight ? "Mot Höger stånd" : "Mot Vänster stånd";
-    var greppPoints = [];
-
-    if (oppStance === "höger") {
-      greppPoints = [
-        "Söka standard höger-höger greppning: Tori tar höger krage, vänster ärm",
-        "Kontrollera motståndarens vänster ärm för att begränsa uchi-mata/o-soto",
-        "Favorisera tekniker till motståndarens öppna sida (vänster för motst.)"
-      ];
-    } else {
-      greppPoints = [
-        "Höger-vänster situation — tvinga klassisk greppning",
-        "Kontrollera korsgreppet tidigt för att undvika tai-otoshi/seoi-nage",
-        "Utnyttja motståndarens öppna höger sida"
-      ];
-    }
-    if (stance) {
-      var myRight = stance === "höger";
-      greppPoints.push(
-        myRight === isOppRight
-          ? "Spegelläge — fokus på fotarbete och timing"
-          : "Spegelvändning — fördel för flertalet inre tekniker"
-      );
-    }
-    cards.push({ title: greppTitle, icon: "\u270B", color: "#2c5f8a", bg: "#eaf0f8", bdr: "#2c5f8a", points: greppPoints });
+  // Grepp-analys
+  if (favGrepp && oppGrepp) {
+    var _KUMI_TIPS$favGrepp3;
+    var counterIds = ((_KUMI_TIPS$favGrepp3 = KUMI_TIPS[favGrepp]) === null || _KUMI_TIPS$favGrepp3 === void 0 ? void 0 : _KUMI_TIPS$favGrepp3[oppGrepp]) || [];
+    var counters = counterIds.map(function (id) {
+      return techniques.find(function (t) {
+        return t.id === id;
+      });
+    }).filter(Boolean);
+    strategy.push({
+      title: "Grepp-strategi",
+      icon: "🤜",
+      color: gold,
+      bg: "#fdf8ee",
+      bdr: gold,
+      points: ["Ditt grepp: ".concat(favGrepp), "Motst\xE5ndarens grepp: ".concat(oppGrepp), counters.length > 0 ? "Utnyttja greppl\xE4get med: ".concat(counters.slice(0, 3).map(function (t) {
+        return t.sv;
+      }).join(", ")) : "Ingen klar fördel — fokus på kuzushi"],
+      techs: counters.slice(0, 3)
+    });
   }
 
-  // --- Greppstil-koncept ---
-  if (oppGrepp) {
-    var greppStyleMap = {
-      "offensiv": {
-        title: "Mot Offensiv greppning",
-        icon: "\u26A1",
-        color: "#c0392b", bg: "#fde8e6", bdr: "#c0392b",
-        points: [
-          "Motst\u00e5ndaren s\u00f6ker aktivt grepp — v\u00e4nta och utnyttja r\u00f6relse",
-          "Anv\u00e4nd vippgrepp (sukashi) n\u00e4r motst\u00e5ndaren griper",
-          "Prioritera o-uchi-gari och ko-uchi-gari i r\u00f6relse"
-        ]
-      },
-      "defensiv": {
-        title: "Mot Defensiv greppning",
-        icon: "\uD83D\uDEE1",
-        color: "#8a6a1a", bg: "#fdf8ee", bdr: "#b8860b",
-        points: [
-          "Motst\u00e5ndaren undviker grepp — pressa med framfoten",
-          "Anv\u00e4nd greppbrytning f\u00f6ljt av snabb kastansats",
-          "Ashi-waza i r\u00f6relse f\u00f6r att \u00f6ppna upp"
-        ]
-      },
-      "kontroll": {
-        title: "Mot Kontrollgrepp",
-        icon: "\uD83D\uDD12",
-        color: "#4a6a2a", bg: "#e8f5e8", bdr: "#3B7A18",
-        points: [
-          "Motst\u00e5ndaren h\u00e5ller fast och kontrollerar — skapa r\u00f6relse",
-          "Bryt rytm med falska ansatser",
-          "Utnyttja s\u00e4nkt tyngdpunkt — o-goshi eller harai-goshi"
-        ]
-      }
-    };
-    var gs = greppStyleMap[oppGrepp];
-    if (gs) cards.push(gs);
+  // Stans-analys
+  if (stance && oppStance) {
+    var same = stance === oppStance;
+    strategy.push({
+      title: "Stans-analys",
+      icon: "⚖️",
+      color: "#2c5f8a",
+      bg: "#e8f0fa",
+      bdr: "#2c5f8a",
+      points: same ? ["B\xE5da ".concat(stance, " \u2014 spegelbild"), "O-uchi-gari och Ko-uchi-gari fungerar bra i spegelläge", "De-ashi-harai är effektiv när stansen är synkad"] : ["Du ".concat(stance, ", motst\xE5ndaren ").concat(oppStance, " \u2014 korsl\xE4ge"), "O-soto-gari är stark mot kors-stans", "Tai-otoshi och Seoi-nage utnyttjar kors-grepp effektivt"],
+      techs: same ? ["o-uchi-gari", "de-ashi-harai", "ko-uchi-gari"].map(function (id) {
+        return techniques.find(function (t) {
+          return t.id === id;
+        });
+      }).filter(Boolean) : ["o-soto-gari", "tai-otoshi", "seoi-nage"].map(function (id) {
+        return techniques.find(function (t) {
+          return t.id === id;
+        });
+      }).filter(Boolean)
+    });
   }
 
-  // --- Egna standardtekniker ---
+  // Standard teknik-taktik
   if (standardTechs.length > 0) {
-    var pts = standardTechs.map(function(t, i) {
-      return "\u25CF" + (i+1) + " " + t.sv + (selectedComboTech && i===0 ? " \u2192 " + selectedComboTech.sv : "");
+    var _standardTechs$;
+    var ashiTechs = standardTechs.filter(function (t) {
+      return t.cat === "ashi-waza";
     });
-    if (favGrepp) pts.unshift("Greppning: " + favGrepp);
-    cards.push({ title: "Din tekniksekvens", icon: "\u26A1", color: "#2c7a4a", bg: "#e2f5e8", bdr: "#2c7a4a", points: pts });
+    var teTechs = standardTechs.filter(function (t) {
+      return t.cat === "te-waza";
+    });
+    var koshiTechs = standardTechs.filter(function (t) {
+      return t.cat === "koshi-waza";
+    });
+    var pts = [];
+    if (ashiTechs.length > 0) pts.push("Starta med ".concat(ashiTechs.map(function (t) {
+      return t.sv;
+    }).join(" / "), " f\xF6r att bryta balans"));
+    if (ashiTechs.length > 0) pts.push("Ashi-waza tvingar uke att förflytta — följ upp med Te-waza eller Koshi-waza");
+    if (teTechs.length > 0 || koshiTechs.length > 0) pts.push("Avsluta med ".concat([].concat(_toConsumableArray(teTechs), _toConsumableArray(koshiTechs)).map(function (t) {
+      return t.sv;
+    }).join(" / ")));
+    if (selectedComboTech) pts.push("Planerad kombination: ".concat((_standardTechs$ = standardTechs[0]) === null || _standardTechs$ === void 0 ? void 0 : _standardTechs$.sv, " \u2192 ").concat(selectedComboTech.sv));
+    strategy.push({
+      title: "Teknik-sekvens",
+      icon: "⚡",
+      color: "#2c7a4a",
+      bg: "#e2f5e8",
+      bdr: "#2c7a4a",
+      points: pts.length > 0 ? pts : ["Välj standard tekniker för att se sekvens-taktik"],
+      techs: [].concat(_toConsumableArray(standardTechs), [selectedComboTech]).filter(Boolean)
+    });
   }
 
-  // --- Placeholder om ingen data ---
-  if (cards.length === 0) {
-    cards.push({
-      title: "Fyll i kampkoncept",
-      icon: "\uD83D\uDCCB",
-      color: mid, bg: paper, bdr: border,
-      points: [
-        "V\u00e4lj motst\u00e5ndarens st\u00e5nd och greppstil under Motst\u00e5ndare-fliken",
-        "Judokans teknikval h\u00e4mtas automatiskt fr\u00e5n Judoka-appen",
-        "\u00C5terkom hit f\u00f6r personlig kampkoncept"
-      ]
+  // Mot motståndarens tekniker
+  if (oppTechs.length > 0) {
+    var _counters = [];
+    oppTechs.forEach(function (ot) {
+      combos.filter(function (c) {
+        return c.from === ot.id;
+      }).forEach(function (c) {
+        var to = techniques.find(function (t) {
+          return t.id === c.to;
+        });
+        if (to && !_counters.find(function (x) {
+          return x.id === to.id;
+        })) _counters.push(to);
+      });
+    });
+    strategy.push({
+      title: "Försvar mot motståndaren",
+      icon: "🛡",
+      color: "#c0392b",
+      bg: "#fde8e6",
+      bdr: "#c0392b",
+      points: ["Motst\xE5ndaren anv\xE4nder: ".concat(oppTechs.map(function (t) {
+        return t.sv;
+      }).join(", ")), _counters.length > 0 ? "Var beredd p\xE5 f\xF6ljdattacker: ".concat(_counters.slice(0, 3).map(function (t) {
+        return t.sv;
+      }).join(", ")) : "Studera motståndarens kombinationer", "Håll låg tyngdpunkt och kontrollera avstånd"],
+      techs: []
     });
   }
 
-  return e("div", null,
-    cards.map(function(card, ci) {
-      return e("div", {
-        key: ci,
-        style: { background: card.bg, border: "1.5px solid " + card.bdr, borderRadius: 8,
-          padding: "0.9rem 1rem", marginBottom: 10 }
-      },
-        e("div", { style: { display: "flex", alignItems: "center", gap: 8, marginBottom: 8 } },
-          e("span", { style: { fontSize: "1.1rem" } }, card.icon),
-          e("div", { style: { fontSize: "0.55rem", textTransform: "uppercase",
-            letterSpacing: "0.1em", color: card.color, fontWeight: 700 } }, card.title)
-        ),
-        e("div", { style: { display: "flex", flexDirection: "column", gap: 5 } },
-          card.points.map(function(pt, pi) {
-            return e("div", { key: pi, style: { display: "flex", gap: 8, alignItems: "flex-start" } },
-              e("span", { style: { color: card.color, fontSize: "0.7rem", flexShrink: 0, marginTop: 1 } }, "\u2022"),
-              e("span", { style: { fontSize: "0.72rem", color: ink, lineHeight: 1.45 } }, pt)
-            );
-          })
-        )
-      );
-    })
-  );
+  // Allmän taktik om lite data
+  if (!hasData) {
+    strategy.push({
+      title: "Fyll i dina val",
+      icon: "📋",
+      color: mid,
+      bg: paper,
+      bdr: border,
+      points: ["Gå till Teknik-fliken och välj stans, kumikata och standardtekniker", "Gå till Motståndare-fliken och välj motståndarens profil", "Återkom hit för personlig strategi och taktik"],
+      techs: []
+    });
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: "flex",
+      flexDirection: "column",
+      gap: 10
+    }
+  }, strategy.map(function (s, i) {
+    return /*#__PURE__*/React.createElement("div", {
+      key: i,
+      style: {
+        borderRadius: 8,
+        border: "1.5px solid ".concat(s.bdr),
+        background: s.bg,
+        padding: "0.9rem 1rem",
+        overflow: "hidden"
+      }
+    }, /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 8
+      }
+    }, /*#__PURE__*/React.createElement("span", {
+      style: {
+        fontSize: "1.1rem"
+      }
+    }, s.icon), /*#__PURE__*/React.createElement("div", {
+      style: {
+        fontSize: "0.62rem",
+        textTransform: "uppercase",
+        letterSpacing: "0.1em",
+        color: s.color,
+        fontWeight: 700,
+        flex: 1
+      }
+    }, s.title)), /*#__PURE__*/React.createElement("ul", {
+      style: {
+        marginLeft: 14,
+        marginBottom: s.techs.length > 0 ? 8 : 0
+      }
+    }, s.points.map(function (p, j) {
+      return /*#__PURE__*/React.createElement("li", {
+        key: j,
+        style: {
+          fontSize: "0.72rem",
+          lineHeight: 1.7,
+          color: ink,
+          listStyle: "disc",
+          marginBottom: 2
+        }
+      }, p);
+    })), s.techs.length > 0 && /*#__PURE__*/React.createElement("div", {
+      style: {
+        display: "flex",
+        flexWrap: "wrap",
+        gap: 5,
+        paddingTop: 6,
+        borderTop: "1px solid ".concat(s.bdr, "40")
+      }
+    }, s.techs.map(function (t) {
+      var cc = CAT_COLOR[t.cat];
+      return /*#__PURE__*/React.createElement("span", {
+        key: t.id,
+        onClick: function onClick() {
+          setSelectedId(t.id);
+          setMainTab("kombdb");
+        },
+        style: {
+          fontSize: "0.65rem",
+          fontWeight: 700,
+          background: paper,
+          color: cc.dot,
+          padding: "3px 8px",
+          borderRadius: 4,
+          cursor: "pointer",
+          border: "1px solid ".concat(cc.dot, "40")
+        }
+      }, t.sv);
+    })));
+  }));
 }
-
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 
 ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
 
