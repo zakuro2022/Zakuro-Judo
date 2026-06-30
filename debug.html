@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="sv"><head>
+<meta charset="UTF-8">
+<title>Debug Storage</title>
+<style>body{font-family:sans-serif;padding:20px;background:#1a1410;color:#fff;}
+pre{background:#222;padding:15px;border-radius:8px;white-space:pre-wrap;word-break:break-all;}
+button{padding:10px 20px;margin:5px;font-size:16px;}</style>
+</head><body>
+<h2>🔍 Zakuro Storage Debug</h2>
+<button onclick="location.reload()">Ladda om</button>
+<button onclick="localStorage.clear();location.reload()">Rensa ALLT</button>
+<h3>zakuro_players innehåll:</h3>
+<pre id="out">Laddar...</pre>
+<h3>Alla localStorage-nycklar:</h3>
+<pre id="keys"></pre>
+<script>
+try {
+  const raw = localStorage.getItem('zakuro_players');
+  document.getElementById('out').textContent = raw 
+    ? JSON.stringify(JSON.parse(raw), null, 2) 
+    : '(TOM - ingen data sparad alls)';
+} catch(e) {
+  document.getElementById('out').textContent = 'FEL: ' + e.message;
+}
+const keys = [];
+for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
+document.getElementById('keys').textContent = keys.length ? keys.join('\n') : '(inga nycklar alls)';
+</script>
+</body></html>
