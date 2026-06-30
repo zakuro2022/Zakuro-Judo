@@ -1220,7 +1220,7 @@ function App() {
   var _useState_lang = useState("sv"),
     lang = _useState_lang[0],
     setLang = _useState_lang[1];
-  var _useState = useState("lottning"),
+  var _useState = useState("motstand"),
     _useState2 = _slicedToArray(_useState, 2),
     mainTab = _useState2[0],
     setMainTab = _useState2[1];
@@ -1832,9 +1832,53 @@ function App() {
       fontWeight: 700,
       alignSelf: "flex-end"
     }
-  }, t("\uD83D\uDCBE Spara",lang)))), /*#__PURE__*/React.createElement("div", {
-    style: {padding:"0.2rem 0.8rem 0.3rem",display:"flex",gap:8,alignItems:"center",borderTop:"1px solid #f5ede8"}
+  }, t("\uD83D\uDCBE Spara",lang)), /*#__PURE__*/React.createElement("button", {
+    onClick: function onClick() {
+      try {
+        var saved = localStorage.getItem('zakuro_players');
+        if (saved) {
+          var loaded = JSON.parse(saved);
+          if (loaded && loaded.length) {
+            setPlayers(loaded);
+            setActivePlayerIdx(0);
+          }
+        }
+      } catch (e) {}
+    },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.6rem",
+      padding: "5px 10px",
+      borderRadius: 4,
+      cursor: "pointer",
+      background: "#2c5f8a",
+      border: "1px solid #2c5f8a",
+      color: "#fff",
+      fontWeight: 700,
+      alignSelf: "flex-end"
+    }
+  }, t("Uppdatera",lang)))), /*#__PURE__*/React.createElement("div", {
+    style: {padding:"0.2rem 0.8rem 0.3rem",display:"flex",gap:8,alignItems:"center",borderTop:"1px solid #f5ede8",flexWrap:"wrap"}
   }, React.createElement("span", {
+    style:{fontSize:"0.5rem",textTransform:"uppercase",color:"#2c5f8a",fontWeight:700,flexShrink:0}
+  }, t("Judoka",lang)), players.length > 1 ? React.createElement("select", {
+    value: activePlayerIdx,
+    onChange: function(ev){ setActivePlayerIdx(parseInt(ev.target.value)); },
+    style: {
+      fontFamily: "'DM Sans',sans-serif",
+      fontSize: "0.7rem",
+      padding: "4px 8px",
+      borderRadius: 4,
+      border: "1px solid #c0d8f0",
+      background: "#fff",
+      color: "#1a1410",
+      cursor: "pointer"
+    }
+  }, players.map(function(p,i){
+    var name = (p.firstName||p.name||("Judoka "+(i+1))) + (p.lastName?(" "+p.lastName):"");
+    var kg = p.weightClass ? (" · "+p.weightClass) : "";
+    return React.createElement("option",{key:i,value:i}, name+kg);
+  })) : null, React.createElement("span", {
     style:{fontSize:"0.5rem",textTransform:"uppercase",color:"#8a7a6a",fontWeight:600,flexShrink:0}
   }, t("Längd (cm)",lang)), React.createElement("input", {
     type:"number",
@@ -1851,7 +1895,7 @@ function App() {
       alignItems: "center",
       borderTop: "1px solid #f0e8e4"
     }
-  },  [["lottning", t("Lottning",lang)], ["motstand", t("Motst\u00e5ndare",lang)], ["foruts", t("Tori vs Uke",lang)]].map(function (_ref2) {
+  },  [["motstand", t("Motst\u00e5ndare",lang)], ["foruts", t("Tori vs Uke",lang)], ["matchanalys", t("Match Analys",lang)]].map(function (_ref2) {
     var _ref3 = _slicedToArray(_ref2, 2),
       id = _ref3[0],
       label = _ref3[1];
