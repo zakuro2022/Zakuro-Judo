@@ -4,26 +4,58 @@
 <title>Debug Storage</title>
 <style>body{font-family:sans-serif;padding:20px;background:#1a1410;color:#fff;}
 pre{background:#222;padding:15px;border-radius:8px;white-space:pre-wrap;word-break:break-all;}
-button{padding:10px 20px;margin:5px;font-size:16px;}</style>
+button{padding:12px 20px;margin:5px;font-size:16px;border-radius:8px;border:none;cursor:pointer;}
+.test{background:#3B7A18;color:#fff;}
+.clear{background:#c0392b;color:#fff;}
+input{padding:8px;font-size:16px;margin:5px;width:90%;}</style>
 </head><body>
-<h2>🔍 Zakuro Storage Debug</h2>
+<h2>🔍 Zakuro Storage Debug v2</h2>
 <button onclick="location.reload()">Ladda om</button>
-<button onclick="localStorage.clear();location.reload()">Rensa ALLT</button>
-<h3>zakuro_players innehåll:</h3>
+<button class="clear" onclick="localStorage.clear();location.reload()">Rensa ALLT</button>
+
+<h3>TEST: Skriv testdata direkt</h3>
+<input id="testname" placeholder="Skriv ett testnamn här" value="DirektTest123">
+<button class="test" onclick="runTest()">Spara testdata direkt (utan att gå via index.html)</button>
+
+<h3>zakuro_players innehåll just nu:</h3>
 <pre id="out">Laddar...</pre>
-<h3>Alla localStorage-nycklar:</h3>
-<pre id="keys"></pre>
+
+<h3>localStorage support-test:</h3>
+<pre id="support"></pre>
+
 <script>
-try {
-  const raw = localStorage.getItem('zakuro_players');
-  document.getElementById('out').textContent = raw 
-    ? JSON.stringify(JSON.parse(raw), null, 2) 
-    : '(TOM - ingen data sparad alls)';
-} catch(e) {
-  document.getElementById('out').textContent = 'FEL: ' + e.message;
+function show() {
+  try {
+    const raw = localStorage.getItem('zakuro_players');
+    document.getElementById('out').textContent = raw 
+      ? JSON.stringify(JSON.parse(raw), null, 2) 
+      : '(TOM - ingen data sparad alls)';
+  } catch(e) {
+    document.getElementById('out').textContent = 'FEL: ' + e.message;
+  }
 }
-const keys = [];
-for (let i = 0; i < localStorage.length; i++) keys.push(localStorage.key(i));
-document.getElementById('keys').textContent = keys.length ? keys.join('\n') : '(inga nycklar alls)';
+function runTest() {
+  const name = document.getElementById('testname').value;
+  const data = [{firstName: name, lastName: "Testsson", name: "Spelare 1"}];
+  try {
+    localStorage.setItem('zakuro_players', JSON.stringify(data));
+    alert('Sparat! Laddar om...');
+    location.reload();
+  } catch(e) {
+    alert('FEL vid sparande: ' + e.message);
+  }
+}
+// Test if localStorage even works in this context
+let supportMsg = '';
+try {
+  localStorage.setItem('__test__', '1');
+  const v = localStorage.getItem('__test__');
+  localStorage.removeItem('__test__');
+  supportMsg = v === '1' ? '✅ localStorage fungerar normalt' : '⚠️ localStorage skrev men läste fel värde';
+} catch(e) {
+  supportMsg = '❌ localStorage BLOCKERAD: ' + e.message;
+}
+document.getElementById('support').textContent = supportMsg + '\n\nDomän: ' + location.origin + location.pathname;
+show();
 </script>
 </body></html>
